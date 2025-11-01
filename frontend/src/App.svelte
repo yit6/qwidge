@@ -1,12 +1,21 @@
 <script lang="ts">
-  import Counter from './lib/Counter.svelte'
-  import NavBar from "./lib/NavBar.svelte";
+  import { Router, type RouteConfig } from "@mateothegreat/svelte5-router";
+  import Index from "./routes/Index.svelte";
+  import Search from "./routes/Search.svelte";
+
+  const routes: RouteConfig[] = [
+    {
+      component: Index
+    },
+    {
+      path: "search",
+      component: Search
+    },
+    // {
+    //   path: "settings",
+    //   component: Settings
+    // }
+  ];
 </script>
 
-<main>
-  <NavBar/>
-
-  <div class="card">
-    <Counter />
-  </div>
-</main>
+<Router {routes} />
