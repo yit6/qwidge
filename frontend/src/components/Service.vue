@@ -3,7 +3,7 @@
 </script>
 
 <template>
-
+  Services
 </template>
 
 <style scoped>

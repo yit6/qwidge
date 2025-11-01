@@ -3,7 +3,7 @@
 </script>
 
 <template>
-
+  ServiceList
 </template>
 
 <style scoped>

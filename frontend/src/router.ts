@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HelloWorld from "@/components/HelloWorld.vue";
-import TheWelcome from "@/components/TheWelcome.vue";
+import Landing from "@/components/Landing.vue";
+import ServiceList from "@/components/ServiceList.vue";
+import Service from "@/components/Service.vue";
 
 export default createRouter({
     history: createWebHistory(),
     routes: [
-        { path: '/', component: HelloWorld },
-        { path: '/about', component: TheWelcome },
+        { path: '/', component: Landing },
+        { path: '/services', component: ServiceList },
+        { path: '/services/:id', component: Service },
     ]
 })
