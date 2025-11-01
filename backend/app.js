@@ -6,7 +6,7 @@ const logger = require('morgan');
 dotenv.config()
 
 const {
-  generatePossibleSiteList,
+  generatePossibleSiteLisa,
 } = require('./controllers/a-eye')
 
 const app = express();
@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.get('/ai', generatePossibleSiteList);
+app.get('/ai', generatePossibleSiteLisa);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
