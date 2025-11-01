@@ -11,6 +11,12 @@ const app = express();
 dotenv.config()
 const port = 8080
 
+const db = require('./db');
+
+db.init_db();
+
+// view engine setup
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
