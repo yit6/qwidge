@@ -1,13 +1,16 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
-const dotenv = require('dotenv')
+const dotenv = require('dotenv');
+var cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 const app = express();
 dotenv.config()
+const port = 8080
 
 
 // view engine setup
@@ -36,4 +39,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
