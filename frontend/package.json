@@ -20,5 +20,8 @@
   },
   "overrides": {
     "vite": "npm:rolldown-vite@7.1.14"
+  },
+  "dependencies": {
+    "@mateothegreat/svelte5-router": "^2.16.19"
   }
 }
