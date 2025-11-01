@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Landing from "@/components/Landing.vue";
-import ServiceList from "@/components/ServiceList.vue";
-import Service from "@/components/Service.vue";
+import Landing from "@/pages/Landing.vue";
+import ServiceList from "@/pages/Services.vue";
+import Service from "@/pages/ServicePage.vue";
 
 export default createRouter({
     history: createWebHistory(),
