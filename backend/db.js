@@ -132,6 +132,14 @@ const get_services_light = async (org) => {
 	return results;
 };
 
+const get_services_for_chatbot = async () => {
+	console.log(`Getting title and description of services for chatbot context`);
+
+	let [results, fields] = await connection.query("SELECT name, description FROM Service");
+
+	return results;
+};
+
 const updateRels = async (id, new_id) => {
 	console.log(`swapping links to service ${id} to ${new_id}`);
 
@@ -149,5 +157,6 @@ module.exports = {
 	merge_org_into,
 	delete_service,
 	get_services_light,
+	get_services_for_chatbot,
 	updateRels,
 };

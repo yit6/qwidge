@@ -17,9 +17,10 @@ const fs = require("fs");
  * and provide in req.body.serviceID the ID as a number of which
  * service you are specifically talking about (currently not working)
  */
-const newChatSession = (req, res) => {
+const newChatSession = async (req, res) => {
     if (req.body.mode === 'general') {
-        const sessionID = createChatStreamSearch();
+        const sessionID = await createChatStreamSearch();
+        console.log(sessionID)
         res.json(sessionID)
     }
     else {
