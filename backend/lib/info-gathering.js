@@ -56,7 +56,7 @@ const parseLinksFromPossibleSiteList = async (text) => {
 }
 
 // Go through a page of text and extract titles and descriptions of services offered
-const extractServices = async (pageText) => {
+const extractServicesAndLinks = async (pageText) => {
     const JSONschema = {
         "type": "object",
         "properties": {
@@ -64,12 +64,12 @@ const extractServices = async (pageText) => {
             "type": "array",
                 "items": {
                     "properties": {
+                    "service_information": {
+                        "type": "string",
+                    },
                     "title": {
                         "type": "string",
                     },
-                    "service_information": {
-                        "type": "string",
-                    }
                     },
                     "required": [
                     "title",
@@ -77,10 +77,25 @@ const extractServices = async (pageText) => {
                     ],
                 }
             },
-            "description": "A list of all the services extracted from the page"
+            "description": "A list of all the services extracted from the page",
+            "linksToExplore": {
+            "type": "array",
+                "items": {
+                    "properties": {
+                    "link": {
+                        "type": "string",
+                    },
+                    },
+                    "required": [
+                    "link",
+                    ],
+                }
+            },
+            "description": "A list links that will lead to more information about services"
         },
         "required": [
-            "services"
+            "services",
+            "linksToExplore"
         ]
     }
 
@@ -89,7 +104,8 @@ const extractServices = async (pageText) => {
     to the public. Also extract any processes such as requesting permission to build on your property \
     or requesting to rent out a town event space. Return a list of the services you find, giving each service/workflow \
     a short title and then all the information on the page about that service. If there is not any information on the service, \
-    leave the description blank.`  
+    leave the description blank. Also collect and return a list of website links that might lead to more information about \
+    services that are offered. Here is the webpage: ${pageText}`  
 
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
@@ -105,7 +121,7 @@ const extractServices = async (pageText) => {
 }
 
 // Remove duplicate services and unify entries
-const finalizeServiceArray = async (pageText) => {
+const removeDuplicates = async (serviceTitles) => {
     const JSONschema = {
         "type": "object",
         "properties": {
@@ -133,8 +149,9 @@ const finalizeServiceArray = async (pageText) => {
         ]
     }
 
-    const prompt = `Given a list of government services and descriptions of the services, please look \
-    for entries of the same service and unify them together into one.`  
+    const prompt = `Given a list of government services, please look \
+    for entries of the same service and unify them together into one. Here is a list \
+    of the services: ${serviceTitles}`  
 
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
@@ -152,5 +169,6 @@ const finalizeServiceArray = async (pageText) => {
 module.exports = {
     generatePossibleSiteList,
     parseLinksFromPossibleSiteList,
-    extractServices,
+    extractServicesAndLinks,
+    finalizeServiceArray,
 }
