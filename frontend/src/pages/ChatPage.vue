@@ -103,7 +103,7 @@ watch(messages, async () => {
 
 <template>
   <div id="service-framework">
-    <ServiceItem />
+    <ServiceItem raw={{flavor}} />
   </div>
   <hr />
   <div id="chat-container">

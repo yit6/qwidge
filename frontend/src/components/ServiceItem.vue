@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { getService, Service } from '@/ServicesService';
-const { serviceId } = defineProps(['serviceId'])
+const { serviceId, raw } = defineProps(['serviceId','raw'])
 
 let service: Service = getService(serviceId);
 if(!service) {
-    service = { id: -1, title: "Dog Fish research", description: "Dog Fish are a very interesting species that many research facilities are not researching. The funding will go towards starting research papers on the species.", imageUrl: "https://i.ytimg.com/vi/5y9wG0o2oys/maxresdefault.jpg", rating: 5, sources: [] }
+    if (raw) {
+        service = { id: -1, title: "???", description: "your dream service", imageUrl:"", rating: 0, sources: [] }
+    }
+    else {
+        service = { id: -1, title: "Dog Fish research", description: "Dog Fish are a very interesting species that many research facilities are not researching. The funding will go towards starting research papers on the species.", imageUrl: "https://i.ytimg.com/vi/5y9wG0o2oys/maxresdefault.jpg", rating: 5, sources: [] }
+    }
 }
 </script>
 

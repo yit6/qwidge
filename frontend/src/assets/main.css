@@ -17,7 +17,7 @@ a {
     color: var(--text-primary);
 }
 
-input {
+input, button {
     font-family: 'Apercu';
 }
 
