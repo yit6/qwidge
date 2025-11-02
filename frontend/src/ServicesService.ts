@@ -1,8 +1,10 @@
+import axios from 'axios'
+
 interface Service {
     id: number,
     title: string,
     description: string,
-    imageUrl: string,
+    imageUrl: string | null,
     rating: number,
     sources: string[],
 }
@@ -12,7 +14,8 @@ let mockServices: Service[] = [
     { id: 1, title: "Service2", description: "desc", imageUrl: "", rating: 5, sources: [] }
 ]
 
-function getServices(): Service[] {
+async function getServices(): Promise<Service[]> {
+    const services = await axios.get('http://localhost:8080/services')
     return mockServices;
 }
 

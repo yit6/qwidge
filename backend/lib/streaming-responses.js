@@ -34,11 +34,11 @@ const createChatStreamKnownService = (serviceDesc) => {
 
 /**
  * Create a chat session for a user who wants to ask generally about all services
- * @param {string[]} serviceTitles array of strings representing the titles of 
+ * @param {object[]} serviceTitles array of strings representing the titles of 
  * the services that we have found
  * @returns sessionID for future
  */
-const createChatStreamSearch = (serviceTitles) => {
+const createChatStreamSearch = (services) => {
     const chat = ai.chats.create({
         model: "gemini-2.5-flash",
         history: [
@@ -47,12 +47,11 @@ const createChatStreamSearch = (serviceTitles) => {
             parts: [{ text: "Hi, thanks for visiting! What services would you want to know about?" }],
         },
         ],
-        // TODO: uncomment
-        // config: {
-        //     systemInstruction: `You are a helpful AI assistant who answers questions on what government \
-        //     services are available. Here is a list of what services are currently offered:
-        //     ${serviceTitles}`,
-        // }
+        config: {
+            systemInstruction: `You are a helpful AI assistant who answers questions on what government \
+            services are available. Here is a list of what services are currently offered:
+            ${services}`,
+        }
     });
 
     const sessionID = crypto.randomUUID()

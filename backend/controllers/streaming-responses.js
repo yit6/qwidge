@@ -21,10 +21,6 @@ const newChatSession = (req, res) => {
         const sessionID = createChatStreamSearch();
         res.json(sessionID)
     }
-    else if (req.body.mode === 'specific') {
-        const sessionID = createChatStreamKnownService();
-        res.json(sessionID)
-    } 
     else {
         const err = new Error('Invalid request, please specify either general or specific for mode parameter')
         err.status = 400
