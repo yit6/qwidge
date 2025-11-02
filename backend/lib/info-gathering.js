@@ -121,7 +121,7 @@ const extractServicesAndLinks = async (pageText) => {
 }
 
 // Remove duplicate services and unify entries
-const finalizeServiceArray = async (pageText) => {
+const removeDuplicates = async (serviceTitles) => {
     const JSONschema = {
         "type": "object",
         "properties": {
@@ -149,8 +149,9 @@ const finalizeServiceArray = async (pageText) => {
         ]
     }
 
-    const prompt = `Given a list of government services and descriptions of the services, please look \
-    for entries of the same service and unify them together into one.`  
+    const prompt = `Given a list of government services, please look \
+    for entries of the same service and unify them together into one. Here is a list \
+    of the services: ${serviceTitles}`  
 
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
