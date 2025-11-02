@@ -34,4 +34,8 @@ function goToAllServices() {
     display: flex;
     justify-content: space-between;
 }
+
+.trending-tiles {
+    display: flex;
+}
 </style>
