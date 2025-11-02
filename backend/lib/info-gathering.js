@@ -104,7 +104,7 @@ const extractServices = async (pageText) => {
     return parsedJSON
 }
 
-// Go through a page of text and extract titles and descriptions of services offered
+// Remove duplicate services and unify entries
 const finalizeServiceArray = async (pageText) => {
     const JSONschema = {
         "type": "object",

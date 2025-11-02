@@ -10,6 +10,10 @@ const {
 } = require('./controllers/a-eye');
 
 const service_controller = require('./controllers/services');
+const {
+  newChatSession,
+  continueChatSession,
+} = require('./controllers/streaming-responses')
 
 const app = express();
 
@@ -34,7 +38,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.get('/ai', generatePossibleSiteLisa);
+app.get('/setup', generatePossibleSiteLisa);
+app.post('/ai/create-session', newChatSession);
+app.post('/ai/chat-with-gemini', continueChatSession);
 
 app.get('/services', service_controller.get_all);
 app.get('/services/:id', service_controller.get);
