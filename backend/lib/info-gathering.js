@@ -55,8 +55,8 @@ const parseLinksFromPossibleSiteList = async (text) => {
     return linksArray
 }
 
-// Come up with what local government sites are relevant in a report-like style
-const extractServices = async (location) => {
+// Go through a page of text and extract titles and descriptions of services offered
+const extractServices = async (pageText) => {
     const JSONschema = {
         "type": "object",
         "properties": {
@@ -88,7 +88,53 @@ const extractServices = async (location) => {
     Given a text version of a webpage, please carefully go through and extract any services that are provided \
     to the public. Also extract any processes such as requesting permission to build on your property \
     or requesting to rent out a town event space. Return a list of the services you find, giving each service/workflow \
-    a short title and then all the information on the page about that service.`  
+    a short title and then all the information on the page about that service. If there is not any information on the service, \
+    leave the description blank.`  
+
+    const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: prompt,
+        config: {
+            responseMimeType: "application/json",
+            responseSchema: JSONschema,
+        },
+    });
+
+    const parsedJSON = JSON.parse(response.text)
+    return parsedJSON
+}
+
+// Go through a page of text and extract titles and descriptions of services offered
+const finalizeServiceArray = async (pageText) => {
+    const JSONschema = {
+        "type": "object",
+        "properties": {
+            "services": {
+            "type": "array",
+                "items": {
+                    "properties": {
+                    "title": {
+                        "type": "string",
+                    },
+                    "service_information": {
+                        "type": "string",
+                    }
+                    },
+                    "required": [
+                    "title",
+                    "service_information"
+                    ],
+                }
+            },
+            "description": "A list of all the services extracted from the page"
+        },
+        "required": [
+            "services"
+        ]
+    }
+
+    const prompt = `Given a list of government services and descriptions of the services, please look \
+    for entries of the same service and unify them together into one.`  
 
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
@@ -106,4 +152,5 @@ const extractServices = async (location) => {
 module.exports = {
     generatePossibleSiteList,
     parseLinksFromPossibleSiteList,
+    extractServices,
 }
