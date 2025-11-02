@@ -131,36 +131,38 @@ const extractServicesAndLinks = async (pageText) => {
 }
 
 // Remove duplicate services and unify entries
-const removeDuplicates = async (serviceTitles) => {
-    const JSONschema = {
-        "type": "object",
-        "properties": {
-            "services": {
-            "type": "array",
-                "items": {
-                    "properties": {
-                    "title": {
-                        "type": "string",
-                    },
-                    "service_information": {
-                        "type": "string",
-                    }
-                    },
-                    "required": [
-                    "title",
-                    "service_information"
-                    ],
-                }
-            },
-            "description": "A list of all the services extracted from the page"
-        },
-        "required": [
-            "services"
-        ]
-    }
+const removeDuplicates = async (unprocessedJSON, previousEntries) => {
+	const JSONschema = {
+		"type": "object",
+		"properties": {
+			"services": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"properties": {
+						"service_information": {
+							"type": "string",
+						},
+						"title": {
+							"type": "string",
+						},
+					},
+					"required": [
+						"title",
+						"service_information"
+					],
+				},
+				"description": "A list of all the services that may contain duplicates",
+			},
+		},
+		"required": [
+			"services",
+		]
+	}
 
-    const prompt = `Given a list of government services, please look \
-    for entries of the same service and unify them together into one. Here is a list \
+    const prompt = `You are a discrening AI assistant. Given a list of government services, please look \
+    for entries of the same or very similar service and unify them together into one entry. If there are no \
+    duplicate entries just return back the input unaltered. Here is the list \
     of the services: ${serviceTitles}`  
 
     const response = await ai.models.generateContent({

@@ -55,8 +55,8 @@ const search_url = async (req, res) => {
 		throw e;
 	}
 	
-	info_gathering.get_services_from_url(req.body.url, 20);
-
+	const unprocessedJSON = await info_gathering.get_services_from_url(req.body.url, 1);
+	const duplicateRemoved = await info_gathering.removeDuplicates(unprocessedJSON, )
 	res.send("Hullo?");
 };
 
