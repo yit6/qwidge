@@ -57,7 +57,9 @@ const get_service = async (id) => {
 	let [results, fields] = await connection.query("SELECT * FROM Service WHERE id_num=?", [id]);
 
 	if (results.length != 1) {
-		throw new Error("Could not find service");
+		let e = new Error("Could not find service", 404);
+		e.status = 404;
+		throw e;
 	}
 
 	return {

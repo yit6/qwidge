@@ -8,11 +8,11 @@ const get_all = async (req, res) => {
 	res.send(JSON.stringify(await services));
 }
 
-const get = async (req, res) => {
+const get = async (req, res, next) => {
 	try {
 		res.send(JSON.stringify(await db.get_service(req.params.id)));
-	} catch {
-		res.send("404!");
+	} catch (e) {
+		next(e);
 	}
 }
 
