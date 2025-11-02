@@ -4,13 +4,6 @@
 
 <template>
   <nav id="navbar">
-    <!-- <div style="display: flex;">
-      
-    </div>
-    <ul style="display: flex; gap:20px;">
-      <li><router-link to="/">Home</router-link></li>
-      <li><router-link to="/services">Services</router-link></li>
-    </ul> -->
     <router-link id="brand" to="/">
       <img src="../assets/logo.svg" width="32" height="32" alt="">
       <h2 style="margin: auto 10px;">Qwidge</h2>
