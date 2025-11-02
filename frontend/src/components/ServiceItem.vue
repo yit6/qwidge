@@ -1,57 +1,33 @@
 <script setup lang="ts">
 import { getService, Service } from '@/ServicesService';
 import { ref, Ref } from "vue";
-const { serviceId, raw } = defineProps(['serviceId','raw']);
 
+const { serviceId, raw } = defineProps(['serviceId', 'raw']);
+
+// Initialize the service data
 let service: Ref<Service> = ref(null);
+
+// Check if serviceId exists and fetch the service
 if (!serviceId) {
   service.value = { id: -1, title: "???", description: "your dream service", imageUrl: "", rating: 0, sources: [] };
 } else {
   getService(serviceId).then((r: number) => service.value = r);
-}a<script setup lang="ts">
-import { getService, Service } from '@/ServicesService';
-import {ref, Ref} from "vue";
-const { serviceId, raw } = defineProps(['serviceId','raw'])
-
-let service: Ref<Service> = ref(null);
-if(!serviceId) {
-  service.value = { id: -1, title: "???", description: "your dream service", imageUrl:"", rating: 0, sources: [] }
-}
-else {
-  getService(serviceId).then((r: number) => service.value = r);
-}
-</script>
-
-<template>
-    <router-link v-if="service" :to="'/services/'+service.id" class="card">
-        <h1>{{ service.title }}</h1>
-	<h2>provided by: {{ service.organization }}</h2>
-        <p>{{ service.description }}</p>
-    </router-link>
-    <p v-else>ERROR</p>
-</template>
-
-<style scoped>
-.card {
-  padding: 5px;
-  border-style: solid;
-  border-color: black;
-  display: flex;
-  flex-direction: column;
-  margin: 5px;
 }
 
-</style>
+// Define a class for color alternation (red or blue)
 const cardColorClass = serviceId % 2 === 0 ? 'red-card' : 'blue-card';
 </script>
 
 <template>
-    <router-link v-if="service" :to="'/services/'+service.id" class="card">
-        <h1>{{ service.title }}</h1>
-	<h2>provided by: {{ service.organization }}</h2>
-        <p>{{ service.description }}</p>
-    </router-link>
-    <p v-else>ERROR</p>
+  <!-- Only render the service card if the service data is loaded -->
+  <router-link v-if="service" :to="'/services/' + service.id" :class="['service-card', cardColorClass]">
+    <h1>{{ service.title }}</h1>
+    <h2>Provided by: {{ service.organization }}</h2>
+    <p>{{ service.description }}</p>
+  </router-link>
+
+  <!-- Error message if service is not found -->
+  <p v-else>ERROR</p>
 </template>
 
 <style scoped>
@@ -71,25 +47,27 @@ const cardColorClass = serviceId % 2 === 0 ? 'red-card' : 'blue-card';
   text-decoration: none; /* Remove underline on the link */
 }
 
+/* Hover effects */
 .service-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
 }
 
-.service-card-content {
-  color: white;
-  text-align: center;
-  flex-grow: 1; /* Ensures the content is centered */
-}
-
-.service-card-content h1 {
+/* Service card content styling */
+.service-card h1 {
   font-size: 1.2rem;
   margin-bottom: 10px;
 }
 
-.service-card-content p {
+.service-card h2 {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.service-card p {
   font-size: 1rem;
   line-height: 1.4;
+  color: white;
 }
 
 /* Red card style */
