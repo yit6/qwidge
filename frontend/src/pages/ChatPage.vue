@@ -4,6 +4,7 @@ import ServiceItem from '@/components/ServiceItem.vue';
 import { marked } from 'marked';
 
 const messages = ref<{ role: string, text: string, parsedText?: string }[]>([]);
+messages.value.push({role:"bot",text:"",parsedText:"Hi, thanks for visiting! I am here to help you learn about services!"})
 const userInput = ref('');
 let sessionData = '';
 
