@@ -5,7 +5,9 @@
 
   let id: number = +useRoute().params.id!;
   let service: Ref<Service> = ref(null);
-  let sourceList: Ref<Array<string>> = ref(null);
+  getService(id).then((r: Service) => {
+    service.value = r
+  });
 </script>
 
 <template>
