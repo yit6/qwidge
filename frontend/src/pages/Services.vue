@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import {getServices, Service} from "@/ServicesService.ts";
 
   let services: Service[] = getServices()
