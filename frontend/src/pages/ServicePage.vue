@@ -1,9 +1,11 @@
 <script setup lang="ts">
   import {useRoute} from "vue-router";
-  import {getService} from "@/ServicesService.ts";
+  import {getService, Service} from "@/ServicesService.ts";
+  import {Ref, ref} from "vue";
 
   let id = useRoute().params.id;
-  let service = getService(id);
+  let service: Ref<Service> = ref(null);
+  getService(id).then(r => service.value = r);
 </script>
 
 <template>

@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import ServiceItem from "@/components/ServiceItem.vue";
-import {getServices, Service} from "@/ServicesService.ts";
+  import ServiceItem from "@/components/ServiceItem.vue";
+  import {getServices, Service} from "@/ServicesService.ts";
+  import {getCurrentInstance, Ref, ref} from "vue";
 
-  let services: Service[] = getServices()
+  let services: Ref<Service[]> = ref([]);
+  getServices().then(r => services.value = r);
+  console.log(services)
 </script>
 
 <template>

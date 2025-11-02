@@ -1,20 +1,19 @@
 <script setup lang="ts">
 import { getService, Service } from '@/ServicesService';
+import {ref, Ref} from "vue";
 const { serviceId, raw } = defineProps(['serviceId','raw'])
 
-let service: Service = getService(serviceId);
-if(!service) {
-    if (raw) {
-        service = { id: -1, title: "???", description: "your dream service", imageUrl:"", rating: 0, sources: [] }
-    }
-    else {
-        service = { id: -1, title: "Dog Fish research", description: "Dog Fish are a very interesting species that many research facilities are not researching. The funding will go towards starting research papers on the species.", imageUrl: "https://i.ytimg.com/vi/5y9wG0o2oys/maxresdefault.jpg", rating: 5, sources: [] }
-    }
+let service: Ref<Service> = ref(null);
+if(raw) {
+  service.value = { id: -1, title: "???", description: "your dream service", imageUrl:"", rating: 0, sources: [] }
+}
+else {
+  getService(serviceId).then((r: number) => service.value = r);
 }
 </script>
 
 <template>
-    <router-link :to="'/services/'+service.id" class="card">
+    <router-link v-if="service" :to="'/services/'+service.id" class="card">
         <h1>{{ service.title }}</h1>
         <p>{{ service.description }}</p>
     </router-link>

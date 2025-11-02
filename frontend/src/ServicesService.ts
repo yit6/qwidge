@@ -9,19 +9,26 @@ interface Service {
     sources: string[],
 }
 
-let mockServices: Service[] = [
-    { id: 0, title: "Service1", description: "desc", imageUrl: "https://i.redd.it/j5ar4s9xl8k11.jpg", rating: 3, sources: [] },
-    { id: 1, title: "Service2", description: "desc", imageUrl: "", rating: 5, sources: [] }
-]
+let services: Service[]
+
+async function getData() {
+    services = (await axios.get('http://localhost:8080/services')).data;
+    console.log("backend contacted", services)
+}
+
 
 async function getServices(): Promise<Service[]> {
-    const services:Service[] = await axios.get('http://localhost:8080/services')
+    if (!services) {
+        await getData();
+    }
     return services;
 }
 
 async function getService(id: number): Promise<Service> {
-    const service = await axios.get(`http://localhost:8080/services/${id}`)
-    return mockServices[id];
+    if (!services) {
+        await getData();
+    }
+    return services[id]!;
 }
 
 export {getService, getServices, Service};
