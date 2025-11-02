@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import SearchBar from '@/components/SearchBar.vue';
 import Trending from '@/components/Trending.vue';
+import { host } from '@/ServicesService';
 </script>
 
 <template>

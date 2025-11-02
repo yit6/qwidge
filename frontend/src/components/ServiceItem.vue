@@ -8,16 +8,48 @@ if (!serviceId) {
   service.value = { id: -1, title: "???", description: "your dream service", imageUrl: "", rating: 0, sources: [] };
 } else {
   getService(serviceId).then((r: number) => service.value = r);
+}a<script setup lang="ts">
+import { getService, Service } from '@/ServicesService';
+import {ref, Ref} from "vue";
+const { serviceId, raw } = defineProps(['serviceId','raw'])
+
+let service: Ref<Service> = ref(null);
+if(!serviceId) {
+  service.value = { id: -1, title: "???", description: "your dream service", imageUrl:"", rating: 0, sources: [] }
 }
+else {
+  getService(serviceId).then((r: number) => service.value = r);
+}
+</script>
+
+<template>
+    <router-link v-if="service" :to="'/services/'+service.id" class="card">
+        <h1>{{ service.title }}</h1>
+	<h2>provided by: {{ service.organization }}</h2>
+        <p>{{ service.description }}</p>
+    </router-link>
+    <p v-else>ERROR</p>
+</template>
+
+<style scoped>
+.card {
+  padding: 5px;
+  border-style: solid;
+  border-color: black;
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+}
+
+</style>
 const cardColorClass = serviceId % 2 === 0 ? 'red-card' : 'blue-card';
 </script>
 
 <template>
-    <router-link v-if="service" :to="'/services/'+service.id" :class="['service-card', cardColorClass]">
-        <div class="service-card-content">
-            <h1>{{ service.title }}</h1>
-            <p>{{ service.description }}</p>
-        </div>
+    <router-link v-if="service" :to="'/services/'+service.id" class="card">
+        <h1>{{ service.title }}</h1>
+	<h2>provided by: {{ service.organization }}</h2>
+        <p>{{ service.description }}</p>
     </router-link>
     <p v-else>ERROR</p>
 </template>

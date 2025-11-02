@@ -1,9 +1,12 @@
 import axios from 'axios'
 
+const host = 'http://localhost:8080'
+
 interface Service {
     id: number,
     title: string,
     description: string,
+    organization: string | null,
     imageUrl: string | null,
     rating: number,
     sources: string[],
@@ -12,8 +15,7 @@ interface Service {
 let services: Service[]
 
 async function getData() {
-    services = (await axios.get('http://localhost:8080/services')).data;
-    console.log("backend contacted", services)
+    services = (await axios.get(host+'/services')).data;
 }
 
 
@@ -36,4 +38,14 @@ async function getService(id: number): Promise<Service> {
     throw new Error("key not found: "+ id)
 }
 
-export {getService, getServices, Service};
+async function getSearch(q: string): Promise<Service[]> {
+	const res:number[] = await axios.get(`http://localhost:8080/search?q=${q}`);
+
+	const ids = JSON.parse(res.data).ids;
+
+	const services:Service[] = await Promise.all(ids.map(getService));
+	console.log(services);
+	return services;
+}
+
+export {getService, getServices, getSearch, Service, host};

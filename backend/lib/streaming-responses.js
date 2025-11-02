@@ -41,7 +41,6 @@ const createChatStreamKnownService = (serviceDesc) => {
  */
 const createChatStreamSearch = async () => {
     const services = await get_services_for_chatbot()
-    console.log(services)
     const chat = ai.chats.create({
         model: "gemini-2.5-flash",
         history: [
@@ -52,8 +51,10 @@ const createChatStreamSearch = async () => {
         ],
         config: {
             systemInstruction: `You are a helpful AI assistant who answers questions on what government \
-            services are available. Here is a list of what services are currently offered:
+            services are available. You can also answer any questions from residents as long as they are harmless in \
+            nature. Respond with plain text, no markdown formatting. Here is a list of what services are currently offered:
             ${JSON.stringify(services)}`,
+            tools: [{ googleSearch: {} }],
         }
     });
 

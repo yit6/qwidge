@@ -5,7 +5,7 @@ const { GoogleGenAI } = require("@google/genai");
 const ai = new GoogleGenAI({apiKey: `${process.env.GEMINI_API}`});
 
 const search_services = async (req, res) => {
-
+	
 	const ids = await db.get_all_service_ids();
 	const services = JSON.stringify(await Promise.all(ids.map(db.get_service)));
 	
