@@ -20,4 +20,4 @@ function getService(id: number): Service {
     return mockServices[id];
 }
 
-export {getService, getServices};
+export {getService, getServices, Service};
