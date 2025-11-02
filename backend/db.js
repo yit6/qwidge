@@ -122,10 +122,10 @@ const delete_service = async (id) => {
 	let [results, fields] = await connection.query("DELETE FROM Service WHERE id_num=?", [id]);
 }
 
-const get_services_light = async () => {
+const get_services_light = async (org) => {
 	console.log(`getting a bare minimum of info from each service`);
 
-	let [results, fields] = await connection.query("SELECT id_num, name, description FROM Service");
+	let [results, fields] = await connection.query("SELECT id_num, name, description FROM Service WHERE organization=?", [org]);
 
 	return results;
 }
