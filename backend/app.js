@@ -32,7 +32,7 @@ db.init_db().then(() => {
 	}
 });
 
-require("./lib/parse-site").parse_site("https://mcwa.org/wp-content/uploads/2021/10/MCWA-Brochure-2022.pdf").then(console.log);
+// require("./lib/parse-site").parse_site("https://mcwa.org/wp-content/uploads/2021/10/MCWA-Brochure-2022.pdf").then(console.log);
 
 // view engine setup
 
