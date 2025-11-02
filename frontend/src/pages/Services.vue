@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import ServiceItem from "@/components/ServiceItem.vue";
 import {getServices, Service} from "@/ServicesService.ts";
 
   let services: Service[] = getServices()
@@ -8,7 +9,7 @@ import {getServices, Service} from "@/ServicesService.ts";
   <h1>ServiceList</h1>
   <ul>
     <template v-for="service in services">
-      <li><router-link :to="'services/'+service.id">{{ service.title }}</router-link></li>
+      <li><ServiceItem/></li>
     </template>
   </ul>
 </template>
