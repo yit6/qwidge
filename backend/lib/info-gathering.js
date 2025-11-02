@@ -56,7 +56,7 @@ const parseLinksFromPossibleSiteList = async (text) => {
 }
 
 // Go through a page of text and extract titles and descriptions of services offered
-const extractServices = async (pageText) => {
+const extractServicesAndLinks = async (pageText) => {
     const JSONschema = {
         "type": "object",
         "properties": {
@@ -168,5 +168,6 @@ const finalizeServiceArray = async (pageText) => {
 module.exports = {
     generatePossibleSiteList,
     parseLinksFromPossibleSiteList,
-    extractServices,
+    extractServicesAndLinks,
+    finalizeServiceArray,
 }
