@@ -27,7 +27,7 @@ db.init_db().then(() => {
 	//db.get_all_service_ids().then(console.log);
 
 	// Add test data
-	if (false) {
+	if (true) {
 	db.add_service("trash", "pick up trash", ["https://google.com/", "https://trash.com/"]);
 	db.add_service("microplastics", "yummy", ["https://microplastics.rit.edu/", "https://website.com/", "https://localhost/"]);
 	}
