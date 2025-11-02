@@ -34,8 +34,6 @@ const search_services = async (req, res) => {
 
 	const prompt = `Given some search text and a list of json objects I want you to return the ids of the ones relevant to the search in a list. Please order them by relevancy and follow the schema. Here is the search text: "${req.query.q}". Here are the objects to search: ${services}`;
 
-	console.log(prompt);
-
 	const response = await ai.models.generateContent({
 		model: "gemini-2.5-flash",
 		contents: prompt,
@@ -49,15 +47,14 @@ const search_services = async (req, res) => {
 }
 
 const search_url = async (req, res) => {
+	res.send(`<a href="http://qwidge.tech">Take me away from here!<a>`);
 	if (!req.body.url) {
 		let e = new Error("No url in body");
 		e.status = 400;
 		throw e;
 	}
 	
-	const unprocessedJSON = await info_gathering.get_services_from_url(req.body.url, 1);
-	const duplicateRemoved = await info_gathering.removeDuplicates(unprocessedJSON, )
-	res.send("Hullo?");
+	await info_gathering.get_services_from_url(req.body.url, 3);
 };
 
 module.exports = {

@@ -15,6 +15,7 @@ const init_db = async () => {
 	[results, fields] = await connection.query("CREATE TABLE IF NOT EXISTS Url (id_num int auto_increment primary key, url text);");
 
 	[results, fields] = await connection.query("CREATE TABLE IF NOT EXISTS RelSUrl (id_num int auto_increment primary key, url_id int, service_id int, FOREIGN KEY (url_id) REFERENCES Url(id_num) ON DELETE CASCADE, FOREIGN KEY (service_id) REFERENCES Service(id_num) ON DELETE CASCADE);");
+	
 
 	console.log("tables created");
 }
@@ -49,6 +50,8 @@ const add_service = async (name, description, organization, urls) => {
 			throw new Error("Failed to insert Service-Url relation");
 		}
 	});
+
+	return insert_id;
 };
 
 const get_service = async (id) => {
@@ -121,13 +124,19 @@ const delete_service = async (id) => {
 	let [results, fields] = await connection.query("DELETE FROM Service WHERE id_num=?", [id]);
 }
 
-const get_services_light = async () => {
+const get_services_light = async (org) => {
 	console.log(`getting a bare minimum of info from each service`);
 
-	let [results, fields] = await connection.query("SELECT id_num, name, description FROM Service");
+	let [results, fields] = await connection.query("SELECT id_num, name, description FROM Service WHERE organization=?", [org]);
 
 	return results;
-}
+};
+
+const updateRels = async (id, new_id) => {
+	console.log(`swapping links to service ${id} to ${new_id}`);
+
+	let [results, fields] = await connection.query("UPDATE RelSUrl Set service_id=? WHERE service_id=?", [new_id, id]);
+};
 
 module.exports = {
 	init_db,
@@ -140,4 +149,5 @@ module.exports = {
 	merge_org_into,
 	delete_service,
 	get_services_light,
+	updateRels,
 };

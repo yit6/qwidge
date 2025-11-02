@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import SearchBar from '@/components/SearchBar.vue';
-
+import Trending from '@/components/Trending.vue'
 
 </script>
 
@@ -12,9 +12,13 @@ import SearchBar from '@/components/SearchBar.vue';
       <SearchBar/>
     </div>
   </div>
+  <trending/>
   <div>
     <p>Have something to offer?</p>
-    <button>Submit Services</button>
+    <form action="http://localhost:8080/search" method="post">
+    <input type="text" name="url">
+    <input type="submit">Submit Services</input>
+    </form>
   </div>
 </template>
 
