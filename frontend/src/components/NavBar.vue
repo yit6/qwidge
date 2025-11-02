@@ -24,7 +24,6 @@
     background-color: var(--bg-primary);
     gap: 2%;
     padding: 10px 20px;
-    margin-bottom: 4px;
     position: sticky;
     top: 0;
     z-index: 100;
