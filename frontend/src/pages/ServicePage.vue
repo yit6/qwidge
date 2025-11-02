@@ -6,7 +6,7 @@
   let id: number = +useRoute().params.id!;
   let service: Ref<Service> = ref(null);
   getService(id).then((r: Service) => {
-    service.value = r
+    service.value = r;
   });
 </script>
 
