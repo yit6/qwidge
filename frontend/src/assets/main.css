@@ -1,0 +1,39 @@
+html, body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Apercu';
+    --bg-primary: #e67700;
+    --bg-secondary: #b96000;
+    --bg-tertiary: #ffe0bf;
+    --bg-accent: #b96000;
+    --text-primary: #000000;
+}
+
+a {
+    color: var(--text-primary);
+}
+
+input {
+    font-family: 'Apercu';
+}
+
+@font-face {
+    font-family: 'Apercu';
+    src: url('./apercu-pro/apercu_bold_pro.otf') format('opentype');
+    font-weight: bold; /* Define the font's weight (e.g., normal, bold, 400, 700) */
+    font-style: normal; /* Define the font's style (e.g., normal, italic) */
+}
+
+@font-face {
+    font-family: 'Apercu';
+    src: url('./apercu-pro/apercu_medium_pro.otf') format('opentype');
+    font-weight: 500; /* Define the font's weight (e.g., normal, bold, 400, 700) */
+    font-style: normal; /* Define the font's style (e.g., normal, italic) */
+}
+
+@font-face {
+    font-family: 'Apercu';
+    src: url('./apercu-pro/apercu_regular_pro.otf') format('opentype');
+    font-weight: normal; /* Define the font's weight (e.g., normal, bold, 400, 700) */
+    font-style: normal; /* Define the font's style (e.g., normal, italic) */
+}
