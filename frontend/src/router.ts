@@ -10,6 +10,6 @@ export default createRouter({
         { path: '/', component: Landing },
         { path: '/services', component: ServiceList },
         { path: '/services/:id', component: Service },
-        { path: '/chat', component: ChatPage },
+        { path: '/chat/:existingMessage', name:'chat', component: ChatPage, props:true },
     ]
 })
