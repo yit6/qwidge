@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  Landing
+  <h1>Service Item</h1>
 </template>
 
 <style scoped>
