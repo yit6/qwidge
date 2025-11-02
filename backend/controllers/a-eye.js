@@ -1,3 +1,8 @@
+const { 
+    generatePossibleSiteList,
+    parseLinksFromPossibleSiteList,
+ } = require('../lib/info-gathering')
+
 const { GoogleGenAI } =  require("@google/genai");
 const ai = new GoogleGenAI({apiKey: `${process.env.GEMINI_API}`});
 
@@ -8,9 +13,9 @@ const ai = new GoogleGenAI({apiKey: `${process.env.GEMINI_API}`});
  * @param {*} res 
  */
 const generatePossibleSiteLisa = async (req, res) => {
-    const { generatePossibleSiteList } = require('../lib/info-gathering')
     const response = await generatePossibleSiteList('Fairport, New York, 14450')
-    res.send(response)
+    const parsed = await parseLinksFromPossibleSiteList(response)
+    res.send(parsed)
 }
 
 module.exports = {
