@@ -19,8 +19,6 @@ const {
 
 const app = express();
 
-const port = 8080
-
 const db = require('./db');
 
 db.init_db().then(() => {
@@ -69,6 +67,6 @@ app.use(function(err, req, res, next) {
   res.send(err.message)
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+app.listen(process.env.BACKEND_PORT, () => {
+  console.log(`Example app listening on port ${process.env.BACKEND_PORT}`)
 })
