@@ -7,11 +7,11 @@ import {getServices, Service} from "@/ServicesService.ts";
 
 <template>
   <h1>ServiceList</h1>
-  <ul>
+  <div>
     <template v-for="service in services">
-      <li><ServiceItem/></li>
+      <ServiceItem :service-id="service.id"/>
     </template>
-  </ul>
+  </div>
 </template>
 
 <style scoped>
