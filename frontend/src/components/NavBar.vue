@@ -1,5 +1,5 @@
 <script setup>
-  
+  import SearchBar from './SearchBar.vue';
 </script>
 
 <template>
@@ -9,10 +9,7 @@
       <h2 style="margin: auto 10px;">Qwidge</h2>
     </router-link>
     <div id="search">
-      <div id="search-logo">
-        <img src="../assets/ailogo.svg" width="32" height="32" alt="">
-      </div>
-      <input/>
+      <SearchBar/>
     </div>
     <div id="route-links">
       <router-link to="/services"><p>Services</p></router-link>
@@ -44,23 +41,6 @@
 #search {
   width: 60%;
   display: flex;
-}
-
-#search input {
-  width: 90%;
-  border: 0;
-  border-radius: 0 10px 10px 0;
-}
-
-#search-logo {
-  background-color: white;
-  border-radius: 10px 0 0 10px;
-  height: 100%;
-  display: flex;
-}
-
-#search-logo img {
-  margin: auto 10px;
 }
 
 #route-links {
