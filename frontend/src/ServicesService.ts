@@ -15,11 +15,12 @@ let mockServices: Service[] = [
 ]
 
 async function getServices(): Promise<Service[]> {
-    const services = await axios.get('http://localhost:8080/services')
-    return mockServices;
+    const services:Service[] = await axios.get('http://localhost:8080/services')
+    return services;
 }
 
-function getService(id: number): Service {
+async function getService(id: number): Promise<Service> {
+    const service = await axios.get(`http://localhost:8080/services/${id}`)
     return mockServices[id];
 }
 
