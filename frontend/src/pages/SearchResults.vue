@@ -7,7 +7,7 @@ import ServiceItem from "@/components/ServiceItem.vue";
 
 let services: Ref<Service[]> = ref([]);
 
-getSearch(useRoute().query.q).then((a) => { services.value = a; });
+getSearch(useRoute().params.text).then((a) => { services.value = a; });
 
 </script>
 
