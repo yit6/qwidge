@@ -73,6 +73,9 @@ const extractServicesAndLinks = async (pageText) => {
 						"title": {
 							"type": "string",
 						},
+						"organization": {
+							"type": "string",
+						},
 					},
 					"required": [
 						"title",
@@ -107,9 +110,11 @@ const extractServicesAndLinks = async (pageText) => {
     Given a text version of a webpage, please carefully go through and extract meaningful services that are provided \
     to the public. Also extract processes such as requesting permission to build on your property \
     or requesting to rent out a town event space. Return a list of the services you find, giving each service/workflow \
-    a short title and then a summary what a resident should know about that service. If there is not any information on the service, \
-    leave the description blank. Also collect and return a list of website links that are sure lead to more information about \
-    services that are offered. Here is the webpage: ${pageText}`  
+    a short title, and then a summary what a resident should know about that service. Also take note of the organization that offers it\
+    If there is not any information on the service, leave the description blank. Also collect and return a list of\
+    website links that are sure lead to more information about \
+    services that are offered, sorted by importantance. Also, please only include links that seem very likely to include more previously unseens services. \
+    Here is the webpage: ${pageText}`  
 
     console.log("asking away!");
 
@@ -177,29 +182,48 @@ const get_services_from_url = async (url, amount) => {
 	console.log(url, amount);
 	
 	let queue = [url];
+	let visited_set = new Set();
 
 	while (queue.length != 0 && amount > 0) {
 
 		console.log(queue);
 
-		amount--;
 		url = queue.shift();
+
+		if (visited_set.size > 0 ) {
+
+			if (visited_set.has(url)) {
+				continue;
+			}
+
+			const prompt = `Does the url "${url}" seem like it would contain different enough information\
+			from any of these: ${[...visited_set].join(" ")} to justify a costly processing step? Respond with a single word yes/no answer.`
+
+			console.log(prompt);
+	
+			const response = await ai.models.generateContent({
+				model: "gemini-2.5-flash",
+				contents: prompt,
+			});
+
+			if (response.text.toLowerCase() == "no") {
+				continue;
+			}
+		}
+
+		visited_set.add(url);
+		amount--;
 
 		console.log(`Working on ${url}`);
 
 		const text = await parse_site(url);
-
 		const output = await extractServicesAndLinks(text);
-
-		console.log(output);
-		console.log(output.linksToExplore);
 
 		queue.push(...(output.linksToExplore.map(o => o.link)));
 
 		output.services.forEach((service) => {
 			console.log(service);
-	
-			db.add_service(service.title, service.service_information, [url]);
+			db.add_service(service.title, service.service_information, service.organization, [url]);
 		});
 	}
 }

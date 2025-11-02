@@ -10,7 +10,7 @@ const init_db = async () => {
 		database: process.env.DB_DATABASE
 	});
 
-	let [results, fields] = await connection.query("CREATE TABLE IF NOT EXISTS Service (id_num int auto_increment primary key, name varchar(256), description text);");
+	let [results, fields] = await connection.query("CREATE TABLE IF NOT EXISTS Service (id_num int auto_increment primary key, name varchar(256), description text, organization varchar(256));");
 
 	[results, fields] = await connection.query("CREATE TABLE IF NOT EXISTS Url (id_num int auto_increment primary key, url text);");
 
@@ -19,10 +19,10 @@ const init_db = async () => {
 	console.log("tables created");
 }
 
-const add_service = async (name, description, urls) => {
+const add_service = async (name, description, organization, urls) => {
 	console.log(`Adding service ${name}`);
 
-	let [results, fields] = await connection.query("INSERT INTO Service (name, description) VALUES (?, ?)", [name, description]);
+	let [results, fields] = await connection.query("INSERT INTO Service (name, description, organization) VALUES (?, ?, ?)", [name, description, organization]);
 
 	if (!results.insertId) {
 		console.error("Failed to insert service");
@@ -66,6 +66,7 @@ const get_service = async (id) => {
 		id: results[0].id_num,
 		title: results[0].name,
 		description: results[0].description,
+		organization: results[0].organization,
 		sources: await get_service_urls(id),
 		imageURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.0aRkG7SSk6ziGRrjkgPRfwHaHa%3Fpid%3DApi&f=1&ipt=90e3f2ed0f81c2f5dbcd5c0e704bf5418ed838286b1d3437290f9bdc23cd8501&ipo=images",
 		rating: 3,
