@@ -105,7 +105,7 @@ const extractServicesAndLinks = async (pageText) => {
     or requesting to rent out a town event space. Return a list of the services you find, giving each service/workflow \
     a short title and then all the information on the page about that service. If there is not any information on the service, \
     leave the description blank. Also collect and return a list of website links that might lead to more information about \
-    services that are offered.`  
+    services that are offered. Here is the webpage: ${pageText}`  
 
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
@@ -121,7 +121,7 @@ const extractServicesAndLinks = async (pageText) => {
 }
 
 // Remove duplicate services and unify entries
-const finalizeServiceArray = async (pageText) => {
+const removeDuplicates = async (serviceTitles) => {
     const JSONschema = {
         "type": "object",
         "properties": {
@@ -149,8 +149,9 @@ const finalizeServiceArray = async (pageText) => {
         ]
     }
 
-    const prompt = `Given a list of government services and descriptions of the services, please look \
-    for entries of the same service and unify them together into one.`  
+    const prompt = `Given a list of government services, please look \
+    for entries of the same service and unify them together into one. Here is a list \
+    of the services: ${serviceTitles}`  
 
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
