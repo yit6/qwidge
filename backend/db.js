@@ -60,7 +60,14 @@ const get_service = async (id) => {
 		throw new Error("Could not find service");
 	}
 
-	return results[0];
+	return {
+		id: results[0].id_num,
+		title: results[0].name,
+		description: results[0].description,
+		sources: await get_service_urls(id),
+		imageURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.0aRkG7SSk6ziGRrjkgPRfwHaHa%3Fpid%3DApi&f=1&ipt=90e3f2ed0f81c2f5dbcd5c0e704bf5418ed838286b1d3437290f9bdc23cd8501&ipo=images",
+		rating: 3,
+	};
 }
 
 const get_url = async (id) => {

@@ -3,11 +3,13 @@ const path = require('path');
 const dotenv = require('dotenv');
 var cookieParser = require('cookie-parser');
 const logger = require('morgan');
-dotenv.config()
+dotenv.config();
 
 const {
   generatePossibleSiteLisa,
-} = require('./controllers/a-eye')
+} = require('./controllers/a-eye');
+
+const service_controller = require('./controllers/services');
 
 const app = express();
 
@@ -33,6 +35,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.get('/ai', generatePossibleSiteLisa);
+
+app.get('/services', service_controller.get_all);
+app.get('/services/:id', service_controller.get);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
