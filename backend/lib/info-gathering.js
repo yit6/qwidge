@@ -132,38 +132,99 @@ const extractServicesAndLinks = async (pageText) => {
 
 // Remove duplicate services and unify entries
 const removeDuplicates = async (unprocessedJSON, previousEntries) => {
+    const oldAndNewServices = []
+
+    // Merge together the two JSON files into one object
+    // should be pushing on a { title:"...",service_information:"..."}
+    // every time
+    for(const entry of unprocessedJSON)
+    {
+        oldAndNewServices.push(entry)
+    }
+    for(const entry of previousEntries) 
+    {
+        oldAndNewServices.push(entry)
+    }
 	const JSONschema = {
-		"type": "object",
-		"properties": {
-			"services": {
-				"type": "array",
-				"items": {
-					"type": "object",
-					"properties": {
-						"service_information": {
-							"type": "string",
-						},
-						"title": {
-							"type": "string",
-						},
-					},
-					"required": [
-						"title",
-						"service_information"
-					],
-				},
-				"description": "A list of all the services that may contain duplicates",
-			},
-		},
-		"required": [
-			"services",
-		]
-	}
+        "type": "array",
+        "description": "List of objects containing information on duplicate services",
+        "items": {
+            "type": "object",
+            "required": [
+            "duplicateServiceIDs",
+            "mergedServiceTitle",
+            "mergedServiceDesc"
+            ],
+            "properties": {
+                "duplicateServiceIDs": {
+                    "type": "array",
+                    "items": {
+                        "type":"number"
+                    }
+                },
+                "mergedServiceTitle": {
+                    "type": "string",
+                },
+                "mergedServiceDescription": {
+                    "type": "string",
+                }
+            }
+        }
+    }
 
     const prompt = `You are a discrening AI assistant. Given a list of government services, please look \
-    for entries of the same or very similar service and unify them together into one entry. If there are no \
-    duplicate entries just return back the input unaltered. Here is the list \
-    of the services: ${serviceTitles}`  
+    for entries of the same or very similar service and group them together by their respective IDs into lists. \
+    After each list of IDs of similar services, provide a unified title and description for that service. It is \
+    very well possible that there are no duplicate services. In that case, just return an empty array.`  
+
+    const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: prompt,
+        config: {
+            responseMimeType: "application/json",
+            responseSchema: JSONschema,
+        },
+    });
+
+    console.log(response.text);
+
+    const parsedJSON = JSON.parse(response.text)
+    return parsedJSON
+}
+
+// Remove duplicate services and unify entries
+const removeDuplicateOrgs = async (unprocessedJSON, previousEntries) => {
+
+    const JSONschema = {
+        "type": "array",
+        "items": {
+            "description": "(potentially empty) Array of objects holding information about duplicate organization names",
+            "type": "object",
+            "required": [
+                "duplicateOrganizations",
+                "representativeName"
+            ],
+            "properties": {
+                "duplicateOrganizations": {
+                    "type": "array",
+                    "items": {
+                        "type":"string"
+                    },
+                    "description":"Array of strings representing organizations with basically the same name"
+                },
+                "representativeName": {
+                    "type": "string",
+                    "description":"A name picked from the one of the duplicate organization names"
+                }
+            }
+        }
+    }
+
+    const prompt = `You are a discrening AI assistant. Given a list of organization names, please look \
+    for entries of the same or extremely similar organization name and group them together into lists. If there are no \
+    duplicate entries just return back the input unaltered. For each list of grouped together organizations with basically the \
+    same name, choose from the list one name that all the rest of the orgs can be renamed to. There might not be duplicates, in that \
+    case just return an empty array. Here is the list of the services: ${serviceTitles}`  
 
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
