@@ -109,6 +109,12 @@ const get_org_names = async () => {
 	return results.map(result => result.organization);
 }
 
+const merge_org_into = async (org_to_be_removed, org_to_consume_other) => {
+	console.log(`renaming org ${org_to_be_removed} to ${org_to_consume_other}`);
+
+	let [results, fields] = await connection.query("UPDATE Service SET organization=? WHERE organization=?", [org_to_consume_other, org_to_be_removed]);
+}
+
 module.exports = {
 	init_db,
 	add_service,
@@ -117,4 +123,5 @@ module.exports = {
 	get_service_urls,
 	get_all_service_ids,
 	get_org_names,
+	merge_org_into,
 };

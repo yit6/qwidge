@@ -32,7 +32,7 @@ db.init_db().then(() => {
 	db.add_service("microplastics", "yummy", "micro corp", ["https://microplastics.rit.edu/", "https://website.com/", "https://localhost/"]);
 	}
 
-	db.get_org_names().then(console.log);
+	db.merge_org_into("trash dude", "micro corp");
 });
 
 // view engine setup
