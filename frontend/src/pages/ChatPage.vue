@@ -3,6 +3,17 @@ import { ref, onMounted, watch, nextTick } from 'vue';
 import ServiceItem from '@/components/ServiceItem.vue';
 import { marked } from 'marked';
 
+import { defineProps } from 'vue';
+
+const props = defineProps({
+  id: {
+    type: [String, Number],
+    required: true,
+  },
+});
+
+console.log('User ID:', props.id);
+
 const messages = ref<{ role: string, text: string, parsedText?: string }[]>([]);
 const flavor = "Hi, thanks for visiting! I am here to help you learn about services!"
 messages.value.push({role:"bot",text:flavor,parsedText:flavor})

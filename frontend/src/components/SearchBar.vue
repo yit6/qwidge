@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
 let list = [
   "hire someone to clean your house...",
   "book a dog walker...",
@@ -34,15 +37,33 @@ let list = [
 ];
 
 let placeholder = list[Math.floor(Math.random() * list.length)];
+
+const searchQuery = ref('');
+
+// Access the Vue Router instance
+const router = useRouter();
+
+const handleSearch = () => {
+  console.log("hi!")
+// Navigate to the search results page, passing the searchQuery as a route parameter
+if (searchQuery.value.trim() !== '') {
+  router.push({name:'/chat',params:{id: 1}});
+}
+};
+
 </script>
 
 <template>
-    <div id="searchbar">
-      <div id="searchbar-logo">
-        <img src="../assets/ailogo.svg" width="32" height="32" alt="">
-      </div>
-      <input :placeholder="placeholder"/>
+  <div id="searchbar">
+    <div id="searchbar-logo">
+      <img src="../assets/ailogo.svg" width="32" height="32" alt="">
     </div>
+    <input 
+      :placeholder="placeholder" 
+      @keyup.enter="handleSearch" 
+      v-model="searchQuery" 
+    />
+  </div>
 </template>
 
 <style scoped>
