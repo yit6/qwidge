@@ -185,6 +185,7 @@ const get_services_from_url = async (url, amount) => {
 	
 	let queue = [url];
 	let visited_set = new Set();
+	let org_set = new Set();
 
 	while (queue.length != 0 && amount > 0) {
 
@@ -226,8 +227,11 @@ const get_services_from_url = async (url, amount) => {
 		output.services.forEach((service) => {
 			console.log(service);
 			db.add_service(service.title, service.service_information, service.organization, [url]);
+			org_set.add(service.organization);
 		});
 	}
+
+	console.log(`check these? ${[...org_set].join(" ")}`);
 }
 
 module.exports = {
