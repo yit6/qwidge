@@ -5,8 +5,7 @@
 <template>
   <nav id="navbar">
     <router-link id="brand" to="/">
-      <img src="../assets/logo.svg" width="32" height="32" alt="">
-      <h2 style="margin: auto 10px;">Qwidge</h2>
+      <img src="../assets/qwidge.png" width="80" height="80" alt="">
     </router-link>
     <div id="search">
       <SearchBar/>
@@ -21,7 +20,7 @@
 #navbar {
     display: flex;
     width: auto;
-    background-color: var(--bg-primary);
+    background-color: #E6E7E9;
     gap: 2%;
     padding: 10px 20px;
     position: sticky;
