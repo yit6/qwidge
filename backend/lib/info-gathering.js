@@ -1,3 +1,5 @@
+const { parse_site } = require("../lib/parse-site");
+const db = require("../db");
 const { GoogleGenAI } =  require("@google/genai");
 const ai = new GoogleGenAI({apiKey: `${process.env.GEMINI_API}`});
 
@@ -57,47 +59,49 @@ const parseLinksFromPossibleSiteList = async (text) => {
 
 // Go through a page of text and extract titles and descriptions of services offered
 const extractServicesAndLinks = async (pageText) => {
-    const JSONschema = {
-        "type": "object",
-        "properties": {
-            "services": {
-            "type": "array",
-                "items": {
-                    "properties": {
-                    "service_information": {
-                        "type": "string",
-                    },
-                    "title": {
-                        "type": "string",
-                    },
-                    },
-                    "required": [
-                    "title",
-                    "service_information"
-                    ],
-                }
-            },
-            "description": "A list of all the services extracted from the page",
-            "linksToExplore": {
-            "type": "array",
-                "items": {
-                    "properties": {
-                    "link": {
-                        "type": "string",
-                    },
-                    },
-                    "required": [
-                    "link",
-                    ],
-                }
-            },
-            "description": "A list links that will lead to more information about services"
-        },
-        "required": [
-            "services",
-            "linksToExplore"
-        ]
-    }
+	const JSONschema = {
+		"type": "object",
+		"properties": {
+			"services": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"properties": {
+						"service_information": {
+							"type": "string",
+						},
+						"title": {
+							"type": "string",
+						},
+					},
+					"required": [
+						"title",
+						"service_information"
+					],
+				},
+				"description": "A list of all the services extracted from the page",
+			},
+			"linksToExplore": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"properties": {
+						"link": {
+							"type": "string",
+						},
+					},
+					"required": [
+						"link",
+					],
+				},
+				"description": "A list links that will lead to more information about services"
+			},
+		},
+		"required": [
+			"services",
+			"linksToExplore"
+		]
+	}
 
     const prompt = `We are researching what services our local government organizations provide. \
     Given a text version of a webpage, please carefully go through and extract any services that are provided \
@@ -106,6 +110,8 @@ const extractServicesAndLinks = async (pageText) => {
     a short title and then all the information on the page about that service. If there is not any information on the service, \
     leave the description blank. Also collect and return a list of website links that might lead to more information about \
     services that are offered. Here is the webpage: ${pageText}`  
+
+    console.log("asking away!");
 
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
@@ -116,8 +122,7 @@ const extractServicesAndLinks = async (pageText) => {
         },
     });
 
-    const parsedJSON = JSON.parse(response.text)
-    return parsedJSON
+    return JSON.parse(response.text);
 }
 
 // Remove duplicate services and unify entries
@@ -162,13 +167,44 @@ const removeDuplicates = async (serviceTitles) => {
         },
     });
 
+    console.log(response.text);
+
     const parsedJSON = JSON.parse(response.text)
     return parsedJSON
+}
+
+const get_services_from_url = async (url, amount) => {
+	console.log(url, amount);
+	
+	let queue = [url];
+
+	while (!queue.isEmpty() && amount > 0) {
+
+		amount--;
+		url = urls.dequeue();
+
+		console.log(`Working on ${url}`);
+
+		const text = await parse_site(url);
+
+		//const output = await extractServicesAndLinks(text);
+		output = { linksToExplore: [ { link: url }, { link: url } ], services: []};
+
+		console.log(output);
+		console.log(output.linksToExplore);
+
+		output.services.forEach((service) => {
+			console.log(service);
+	
+			db.add_service(service.title, service.service_information, [url]);
+		});
+	}
 }
 
 module.exports = {
     generatePossibleSiteList,
     parseLinksFromPossibleSiteList,
     extractServicesAndLinks,
-    finalizeServiceArray,
+    removeDuplicates,
+    get_services_from_url,
 }
