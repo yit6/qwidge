@@ -9,16 +9,20 @@ if(!service) {
 </script>
 
 <template>
-    <router-link :to="'/services/'+service.id" active-class="card">
+    <router-link :to="'/services/'+service.id" class="card">
         <h1>{{ service.title }}</h1>
-        <p>{{service.description }}</p>
+        <p>{{ service.description }}</p>
     </router-link>
 </template>
 
 <style scoped>
 .card {
-    aspect-ratio: 1;
-    color: red;
+  padding: 5px;
+  border-style: solid;
+  border-color: black;
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
 }
 
 </style>
