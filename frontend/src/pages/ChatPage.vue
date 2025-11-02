@@ -2,7 +2,7 @@
 import { ref, onMounted, watch, nextTick } from 'vue';
 import ServiceItem from '@/components/ServiceItem.vue';
 import { marked } from 'marked';
-import host from "@/ServicesService.js"
+import { host } from "@/ServicesService.js"
 import { defineProps } from 'vue';
 
 const props = defineProps({

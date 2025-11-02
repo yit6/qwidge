@@ -48,4 +48,4 @@ async function getSearch(q: string): Promise<Service[]> {
 	return services;
 }
 
-export {getService, getServices, getSearch, Service};
+export {getService, getServices, getSearch, Service, host};
