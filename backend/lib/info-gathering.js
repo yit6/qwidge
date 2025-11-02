@@ -94,7 +94,7 @@ const extractServicesAndLinks = async (pageText) => {
 						"link",
 					],
 				},
-				"description": "A list links that will lead to more information about services"
+				"description": "A list of links that will lead to more information about services that the government offers"
 			},
 		},
 		"required": [
@@ -103,12 +103,12 @@ const extractServicesAndLinks = async (pageText) => {
 		]
 	}
 
-    const prompt = `We are researching what services our local government organizations provide. \
-    Given a text version of a webpage, please carefully go through and extract any services that are provided \
-    to the public. Also extract any processes such as requesting permission to build on your property \
+    const prompt = `We are researching what useful services our local government organizations provide. \
+    Given a text version of a webpage, please carefully go through and extract meaningful services that are provided \
+    to the public. Also extract processes such as requesting permission to build on your property \
     or requesting to rent out a town event space. Return a list of the services you find, giving each service/workflow \
-    a short title and then all the information on the page about that service. If there is not any information on the service, \
-    leave the description blank. Also collect and return a list of website links that might lead to more information about \
+    a short title and then a summary what a resident should know about that service. If there is not any information on the service, \
+    leave the description blank. Also collect and return a list of website links that are sure lead to more information about \
     services that are offered. Here is the webpage: ${pageText}`  
 
     console.log("asking away!");
