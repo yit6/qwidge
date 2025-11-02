@@ -37,8 +37,28 @@ const newChatSession = (req, res) => {
  * }
  */
 const continueChatSession = async (req, res) => {
-    const responseStream = await chatWithGemini(req.body.sessionID, req.body.message)
-    responseStream.pipe(res)
+try {
+    const { sessionID, message } = req.body;
+    const responseStream = await chatWithGemini(sessionID, message);
+
+    // Set up streaming headers so the client knows to handle streamed text
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+    res.flushHeaders?.(); // flush headers immediately if using compression
+
+    for await (const chunk of responseStream) {
+      // Each chunk is typically a text delta from the model
+      res.write(chunk.text);
+    }
+
+    // When finished, close the stream
+    res.end();
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error streaming chat");
+  }
 }
 
 module.exports = {
