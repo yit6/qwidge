@@ -47,6 +47,7 @@ const search_services = async (req, res) => {
 }
 
 const search_url = async (req, res) => {
+	res.send(`<a href="http://qwidge.tech">Take me away from here!<a>`);
 	if (!req.body.url) {
 		let e = new Error("No url in body");
 		e.status = 400;
@@ -54,7 +55,6 @@ const search_url = async (req, res) => {
 	}
 	
 	await info_gathering.get_services_from_url(req.body.url, 3);
-	res.send("Hullo?");
 };
 
 module.exports = {
