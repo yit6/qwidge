@@ -40,9 +40,80 @@ const newChatSession = (req, res) => {
  * }
  */
 const continueChatSession = async (req, res) => {
-    const responseStream = await chatWithGemini(req.body.sessionID, req.body.message)
-    res.send(responseStream)
-}
+    try {
+        const sessionID = req.body.sessionID;
+        const message = req.body.message;
+
+        console.log(`Received message for sessionID: ${sessionID}, message: "${message}"`);
+
+        // Get the stream from chatWithGemini
+        const streamResponse = await chatWithGemini(sessionID, message);
+
+        // Log the full streamResponse to confirm it's an async iterator
+        console.log("Full streamResponse:", streamResponse);
+
+        if (!streamResponse) {
+            throw new Error("No response from the chat session.");
+        }
+
+        let result = '';
+        const chunkSize = 1; // Adjust chunk size as needed (e.g., 100 characters per chunk)
+        const delay = 100; // Delay in milliseconds between chunks (e.g., 500ms)
+
+        // Check if streamResponse is an async iterable and process chunks
+        if (streamResponse[Symbol.asyncIterator]) {
+            console.log("streamResponse is an async iterable. Processing chunks...");
+
+            res.setHeader('Content-Type', 'text/plain');
+            res.flushHeaders(); // Start sending the response headers
+
+            // Use a for-await-of loop to consume the stream
+            for await (const chunk of streamResponse) {
+                // Log the chunk type and value for debugging
+                console.log('Received chunk:', chunk);
+                console.log('Chunk type:', typeof chunk);
+
+                // Check if chunk is an object (which is expected)
+                if (chunk && chunk.candidates && Array.isArray(chunk.candidates)) {
+                    // Extract the content from the candidates
+                    const chunkContent = chunk.candidates[0]?.content;
+
+                    if (chunkContent && chunkContent.parts && Array.isArray(chunkContent.parts)) {
+                        // Extract the text from parts
+                        const chunkText = chunkContent.parts.map(part => part.text).join(' ');
+                        console.log('Extracted text from chunk:', chunkText);
+
+                        // Append chunk content to result
+                        result += chunkText;
+
+                        // Send a smaller part of the result to the client
+                        res.write(chunkText);
+
+                        // Optionally, introduce a delay before sending the next chunk
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    } else {
+                        console.warn("No parts found in chunk content:", chunkContent);
+                    }
+                } else {
+                    console.warn("Unexpected chunk format:", chunk);
+                    // Handle unexpected chunk structure if necessary
+                }
+            }
+
+            // End the response once all chunks have been sent
+            res.end();
+            console.log('Final output (streamed):', result);
+        } else {
+            console.log("streamResponse is not an async iterable.");
+            // Handle the case where the response is not a stream (e.g., a single response object)
+            res.json(streamResponse);
+        }
+
+    } catch (error) {
+        console.error('Error in continueChatSession:', error);
+        res.status(500).json({ error: 'Error processing chat: ' + error.message });
+    }
+};
 
 module.exports = {
     newChatSession,

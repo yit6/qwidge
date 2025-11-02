@@ -62,13 +62,21 @@ const createChatStreamSearch = (serviceTitles) => {
 }
 
 const chatWithGemini = async (sessionID, message) => {
-    const sessionChat = sessions.get(sessionID)
-    const streamResponse = await sessionChat.sendMessageStream({
+    const sessionChat = sessions.get(sessionID);
+
+    if (!sessionChat) {
+        throw new Error('Session not found');
+    }
+
+    // This assumes `sendMessageStream` is the correct method for streaming data.
+    // Stream the response and process it as it arrives.
+    const streamResponse = sessionChat.sendMessageStream({
         message,
     });
 
-    return streamResponse
-}
+    // Return the stream response directly (you can also process chunks in here if needed)
+    return streamResponse;
+};
 
 module.exports = {
     createChatStreamKnownService, 
