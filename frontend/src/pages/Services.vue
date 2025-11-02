@@ -10,7 +10,7 @@
 
 <template>
   <h1>ServiceList</h1>
-  <div>
+  <div id="service-list">
     <template v-for="service in services">
       <ServiceItem :service-id="service.id"/>
     </template>
@@ -18,5 +18,8 @@
 </template>
 
 <style scoped>
+#service-list {
+  display: flex;
+}
 
 </style>
