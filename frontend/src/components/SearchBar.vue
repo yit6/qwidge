@@ -14,9 +14,11 @@
 <style scoped>
 #searchbar {
   width: 100%;
+  height: max-content;
   display: flex;
   border: 3px solid black;
   border-radius: 12px;
+  margin: auto;
 }
 
 #searchbar input {
@@ -33,7 +35,6 @@
 #searchbar:has(input:focus) {
   filter: brightness(0.95);
 }
-
 
 #searchbar-logo {
   background-color: white;
