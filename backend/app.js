@@ -11,6 +11,7 @@ const {
 } = require('./controllers/a-eye');
 
 const service_controller = require('./controllers/services');
+const search_controller = require('./controllers/search');
 const {
   newChatSession,
   continueChatSession,
@@ -32,8 +33,6 @@ db.init_db().then(() => {
 	}
 });
 
-// require("./lib/parse-site").parse_site("https://mcwa.org/wp-content/uploads/2021/10/MCWA-Brochure-2022.pdf").then(console.log);
-
 // view engine setup
 
 app.use(cors('*'))
@@ -48,6 +47,8 @@ app.post('/ai/chat-with-gemini', continueChatSession);
 
 app.get('/services', service_controller.get_all);
 app.get('/services/:id', service_controller.get);
+
+app.get('/search', search_controller.search_services);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
