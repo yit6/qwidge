@@ -15,6 +15,7 @@ else {
 <template>
     <router-link v-if="service" :to="'/services/'+service.id" class="card">
         <h1>{{ service.title }}</h1>
+	<h2>provided by: {{ service.organization }}</h2>
         <p>{{ service.description }}</p>
     </router-link>
     <p v-else>ERROR</p>

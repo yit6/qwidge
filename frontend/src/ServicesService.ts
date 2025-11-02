@@ -6,6 +6,7 @@ interface Service {
     id: number,
     title: string,
     description: string,
+    organization: string | null,
     imageUrl: string | null,
     rating: number,
     sources: string[],
@@ -15,7 +16,6 @@ let services: Service[]
 
 async function getData() {
     services = (await axios.get(host+'/services')).data;
-    console.log("backend contacted", services)
 }
 
 
@@ -40,9 +40,8 @@ async function getService(id: number): Promise<Service> {
 
 async function getSearch(q: string): Promise<Service[]> {
 	const res:number[] = await axios.get(`http://localhost:8080/search?q=${q}`);
-	console.log(res);
 
-	const ids = res.data.ids;
+	const ids = JSON.parse(res.data).ids;
 
 	const services:Service[] = await Promise.all(ids.map(getService));
 	console.log(services);
