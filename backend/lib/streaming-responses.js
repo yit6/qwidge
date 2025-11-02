@@ -1,6 +1,7 @@
 const { GoogleGenAI } =  require("@google/genai");
 const crypto = require('crypto')
 const ai = new GoogleGenAI({apiKey: `${process.env.GEMINI_API}`});
+const { get_services_for_chatbot } = require('../db')
 
 // setup for handling multiple sessions
 const sessions = new Map()
@@ -38,7 +39,8 @@ const createChatStreamKnownService = (serviceDesc) => {
  * the services that we have found
  * @returns sessionID for future
  */
-const createChatStreamSearch = (services) => {
+const createChatStreamSearch = async () => {
+    const services = await get_services_for_chatbot()
     const chat = ai.chats.create({
         model: "gemini-2.5-flash",
         history: [
@@ -49,8 +51,10 @@ const createChatStreamSearch = (services) => {
         ],
         config: {
             systemInstruction: `You are a helpful AI assistant who answers questions on what government \
-            services are available. Here is a list of what services are currently offered:
-            ${services}`,
+            services are available. You can also answer any questions from residents as long as they are harmless in \
+            nature. Respond with plain text, no markdown formatting. Here is a list of what services are currently offered:
+            ${JSON.stringify(services)}`,
+            tools: [{ googleSearch: {} }],
         }
     });
 

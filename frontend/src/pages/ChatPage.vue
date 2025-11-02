@@ -116,15 +116,12 @@ watch(messages, async () => {
 </script>
 
 <template>
-  <div id="service-framework">
-    <ServiceItem raw={{flavor}} />
-  </div>
   <hr />
   <div id="chat-container">
     <ul id="chat-box">
       <li v-for="(msg, index) in messages" :key="index" :class="msg.role">
         <p v-if="msg.role === 'user'">{{ msg.text }}</p>
-        <p v-if="msg.role === 'bot'" v-html="msg.parsedText"></p> <!-- Render parsed markdown for bot -->
+        <p v-else>{{ msg.text }}</p>
       </li>
     </ul>
     <div id="input-container">
