@@ -4,10 +4,20 @@ import { useRoute } from "vue-router";
 import { getSearch } from "@/ServicesService.ts";
 import { Ref, ref } from "vue";
 import ServiceItem from "@/components/ServiceItem.vue";
+import { defineProps } from 'vue';
 
 let services: Ref<Service[]> = ref([]);
 
-getSearch(useRoute().params.text).then((a) => { services.value = a; });
+const props = defineProps({
+  text: {
+    type: String,
+    required: true,
+  },
+});
+
+if (props.text) {
+	getSearch(props.text).then((a) => { services.value = a; });
+}
 
 </script>
 

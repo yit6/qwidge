@@ -47,7 +47,7 @@ const handleSearch = () => {
   console.log("hi!")
 // Navigate to the search results page, passing the searchQuery as a route parameter
 if (searchQuery.value.trim() !== '') {
-  router.push({name:'chat',params:{existingMessage: searchQuery.value.trim()}});
+  router.push({name:'search',params:{text: searchQuery.value.trim()}});
 }
 };
 
