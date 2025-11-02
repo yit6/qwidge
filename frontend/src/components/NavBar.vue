@@ -17,7 +17,7 @@
     </router-link>
     <div id="search">
       <div id="search-logo">
-        <img src="../assets/logo.svg" width="32" height="32" alt="">
+        <img src="../assets/ailogo.svg" width="32" height="32" alt="">
       </div>
       <input/>
     </div>
@@ -35,6 +35,9 @@
     gap: 2%;
     padding: 10px 20px;
     margin-bottom: 4px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 #brand {
@@ -64,8 +67,6 @@
 }
 
 #search-logo img {
-  width: 20px;
-  height: 20px;
   margin: auto 10px;
 }
 
