@@ -34,7 +34,6 @@ let list = [
 ];
 
 let placeholder = list[Math.floor(Math.random() * list.length)];
-console.log(placeholder)
 </script>
 
 <template>
