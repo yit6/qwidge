@@ -13,10 +13,6 @@ p,h1 {
     margin: 0;
 }
 
-a {
-    color: var(--text-primary);
-}
-
 input, button {
     font-family: 'Apercu';
 }
