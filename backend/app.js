@@ -31,6 +31,8 @@ db.init_db().then(() => {
 	db.add_service("trash", "pick up trash", "trash dude", ["https://google.com/", "https://trash.com/"]);
 	db.add_service("microplastics", "yummy", "micro corp", ["https://microplastics.rit.edu/", "https://website.com/", "https://localhost/"]);
 	}
+
+	db.get_org_names().then(console.log);
 });
 
 // view engine setup

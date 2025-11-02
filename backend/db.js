@@ -101,11 +101,20 @@ const get_all_service_ids = async () => {
 	return results.map(result => result.id_num);
 }
 
+const get_org_names = async () => {
+	console.log(`getting org names`);
+
+	let [results, fields] = await connection.query("SELECT DISTINCT organization FROM Service");
+
+	return results.map(result => result.organization);
+}
+
 module.exports = {
 	init_db,
 	add_service,
 	get_service,
 	get_url,
 	get_service_urls,
-	get_all_service_ids
+	get_all_service_ids,
+	get_org_names,
 };
