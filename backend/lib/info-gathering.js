@@ -131,11 +131,13 @@ const extractServicesAndLinks = async (pageText) => {
 }
 
 // Remove duplicate services and unify entries
+// both parameters of this function should be arrays of objects where
+// the objects have a title, service_information, and id_num
 const removeDuplicates = async (unprocessedJSON, previousEntries) => {
     const oldAndNewServices = []
 
     // Merge together the two JSON files into one object
-    // should be pushing on a { title:"...",service_information:"..."}
+    // should be pushing on a {id_num:#, title:"...",service_information:"..."}
     // every time
     for(const entry of unprocessedJSON)
     {
@@ -175,7 +177,8 @@ const removeDuplicates = async (unprocessedJSON, previousEntries) => {
     const prompt = `You are a discrening AI assistant. Given a list of government services, please look \
     for entries of the same or very similar service and group them together by their respective IDs into lists. \
     After each list of IDs of similar services, provide a unified title and description for that service. It is \
-    very well possible that there are no duplicate services. In that case, just return an empty array.`  
+    very well possible that there are no duplicate services. In that case, just return an empty array.
+    Here is the list of services: ${oldAndNewServices}`  
 
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
