@@ -182,52 +182,43 @@ const convertResearchToJSONschema = async (topic) => {
 // Remove duplicate services and unify entries
 // both parameters of this function should be arrays of objects where
 // the objects have a title, service_information, and id_num
-const removeDuplicates = async (unprocessedJSON, previousEntries) => {
-    const oldAndNewServices = []
-
-    // Merge together the two JSON files into one object
-    // should be pushing on a {id_num:#, title:"...",service_information:"..."}
-    // every time
-    for(const entry of unprocessedJSON)
-    {
-        oldAndNewServices.push(entry)
-    }
-    for(const entry of previousEntries) 
-    {
-        oldAndNewServices.push(entry)
-    }
+const removeDuplicateServices = async (organization) => {
 	const JSONschema = {
-        "type": "array",
-        "description": "List of objects containing information on duplicate services",
-        "items": {
-            "type": "object",
-            "required": [
-            "duplicateServiceIDs",
-            "mergedServiceTitle",
-            "mergedServiceDesc"
-            ],
-            "properties": {
-                "duplicateServiceIDs": {
-                    "type": "array",
-                    "items": {
-                        "type":"number"
-                    }
-                },
-                "mergedServiceTitle": {
-                    "type": "string",
-                },
-                "mergedServiceDescription": {
-                    "type": "string",
-                }
-            }
-        }
-    }
+		"type": "array",
+		"description": "List of objects containing information on duplicate services",
+		"items": {
+			"type": "object",
+			"required": [
+				"duplicateServiceIDs",
+				"mergedServiceTitle",
+				"mergedServiceDescription"
+			],
+			"properties": {
+				"duplicateServiceIDs": {
+					"type": "array",
+					"items": {
+						"type":"number"
+					}
+				},
+				"mergedServiceTitle": {
+					"type": "string",
+				},
+				"mergedServiceDescription": {
+					"type": "string",
+				}
+			}
+		}
+	}
+
+    const services = await db.get_services_light(organization);
+
+    console.log(`removing duplicates for ${organization}`);
 
     const prompt = `You are a discrening AI assistant. Given a list of government services, please look \
     for entries of the same or very similar service and group them together by their respective IDs into lists. \
     After each list of IDs of similar services, provide a unified title and description for that service. It is \
     very well possible that there are no duplicate services. In that case, just return an empty array.
-    Here is the list of services: ${oldAndNewServices}`  
+    Here is the list of services: ${JSON.stringify(services)}`  
 
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
@@ -238,14 +229,20 @@ const removeDuplicates = async (unprocessedJSON, previousEntries) => {
         },
     });
 
-    console.log(response.text);
-
-    const parsedJSON = JSON.parse(response.text)
-    return parsedJSON
+    JSON.parse(response.text).forEach(async (d) => {
+    	console.log(d);
+	const new_id = await db.add_service(d.mergedServiceTitle, d.mergedServiceDescription, organization, []);
+    	console.log(`added ${new_id}`);
+    	d.duplicateServiceIDs.forEach(async (id) => {
+		db.updateRels(id, new_id);
+		db.delete_service(id);
+		console.log(`removed ${id}`);
+	});
+    });
 }
 
 // Remove duplicate services and unify entries
-const removeDuplicateOrgs = async (unprocessedJSON, previousEntries) => {
+const removeDuplicateOrgs = async (org_set) => {
 
     const JSONschema = {
         "type": "array",
@@ -276,7 +273,7 @@ const removeDuplicateOrgs = async (unprocessedJSON, previousEntries) => {
     for entries of the same or extremely similar organization name and group them together into lists. If there are no \
     duplicate entries just return back the input unaltered. For each list of grouped together organizations with basically the \
     same name, choose from the list one name that all the rest of the orgs can be renamed to. There might not be duplicates, in that \
-    case just return an empty array. Here is the list of the services: ${serviceTitles}`  
+    case just return an empty array. Here is the list of the organizations: ${(await db.get_org_names()).map(name=>'"'+name+'"').join(" ")}`;
 
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
@@ -287,22 +284,26 @@ const removeDuplicateOrgs = async (unprocessedJSON, previousEntries) => {
         },
     });
 
-    console.log(response.text);
+    JSON.parse(response.text).forEach(duplicate => {
+    	duplicate.duplicateOrganizations.forEach(name => {
+		db.merge_org_into(name, duplicate.representativeName);
+		if (org_set.has(name)) {
+			org_set.delete(name);
+			org_set.add(duplicate.representativeName);
+		};
+	});
+    });
 
-    const parsedJSON = JSON.parse(response.text)
-    return parsedJSON
+    return org_set;
 }
 
 const get_services_from_url = async (url, amount) => {
-	console.log(url, amount);
-	
+
 	let queue = [url];
 	let visited_set = new Set();
 	let org_set = new Set();
 
 	while (queue.length != 0 && amount > 0) {
-
-		console.log(queue);
 
 		url = queue.shift();
 
@@ -315,8 +316,6 @@ const get_services_from_url = async (url, amount) => {
 			const prompt = `Does the url "${url}" seem like it would contain different enough information\
 			from any of these: ${[...visited_set].join(" ")} to justify a costly processing step? Respond with a single word yes/no answer.`
 
-			console.log(prompt);
-	
 			const response = await ai.models.generateContent({
 				model: "gemini-2.5-flash",
 				contents: prompt,
@@ -338,19 +337,20 @@ const get_services_from_url = async (url, amount) => {
 		queue.push(...(output.linksToExplore.map(o => o.link)));
 
 		output.services.forEach((service) => {
-			console.log(service);
 			db.add_service(service.title, service.service_information, service.organization, [url]);
 			org_set.add(service.organization);
 		});
 	}
 
-	console.log(`check these? ${[...org_set].join(" ")}`);
+	console.log(org_set);
+
+	org_set = await removeDuplicateOrgs(org_set);
+	org_set.forEach(removeDuplicateServices);
 }
 
 module.exports = {
     generatePossibleSiteList,
     parseLinksFromPossibleSiteList,
     extractServicesAndLinks,
-    removeDuplicates,
     get_services_from_url,
 }

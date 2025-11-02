@@ -50,6 +50,8 @@ const add_service = async (name, description, organization, urls) => {
 			throw new Error("Failed to insert Service-Url relation");
 		}
 	});
+
+	return insert_id;
 };
 
 const get_service = async (id) => {
@@ -128,7 +130,13 @@ const get_services_light = async (org) => {
 	let [results, fields] = await connection.query("SELECT id_num, name, description FROM Service WHERE organization=?", [org]);
 
 	return results;
-}
+};
+
+const updateRels = async (id, new_id) => {
+	console.log(`swapping links to service ${id} to ${new_id}`);
+
+	let [results, fields] = await connection.query("UPDATE RelSUrl Set service_id=? WHERE service_id=?", [new_id, id]);
+};
 
 module.exports = {
 	init_db,
@@ -141,4 +149,5 @@ module.exports = {
 	merge_org_into,
 	delete_service,
 	get_services_light,
+	updateRels,
 };
