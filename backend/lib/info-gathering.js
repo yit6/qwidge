@@ -130,6 +130,55 @@ const extractServicesAndLinks = async (pageText) => {
     return JSON.parse(response.text);
 }
 
+// Just go to the internet and find stuff
+const convertResearchToJSONschema = async (topic) => {
+	const JSONschema = {
+        "type": "object",
+        "properties": {
+            "title": {
+                "type": "string",
+            },
+            "description": {
+                "type": "string",
+            },
+            "sources": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            }
+        },
+        "required": [
+            "title",
+            "description",
+            "sources"
+        ]
+    }
+
+    const prompt = `We are researching what useful services our local government organizations provide. \
+    Given a text version of a webpage, please carefully go through and extract meaningful services that are provided \
+    to the public. Also extract processes such as requesting permission to build on your property \
+    or requesting to rent out a town event space. Return a list of the services you find, giving each service/workflow \
+    a short title, and then a summary what a resident should know about that service. Also take note of the organization that offers it\
+    If there is not any information on the service, leave the description blank. Also collect and return a list of\
+    website links that are sure lead to more information about \
+    services that are offered, sorted by importantance. Also, please only include links that seem very likely to include more previously unseens services. \
+    Here is the webpage: ${pageText}`  
+
+    console.log("asking away!");
+
+    const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: prompt,
+        config: {
+            responseMimeType: "application/json",
+            responseSchema: JSONschema,
+        },
+    });
+
+    return JSON.parse(response.text);
+}
+
 // Remove duplicate services and unify entries
 // both parameters of this function should be arrays of objects where
 // the objects have a title, service_information, and id_num

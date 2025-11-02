@@ -15,6 +15,7 @@ const init_db = async () => {
 	[results, fields] = await connection.query("CREATE TABLE IF NOT EXISTS Url (id_num int auto_increment primary key, url text);");
 
 	[results, fields] = await connection.query("CREATE TABLE IF NOT EXISTS RelSUrl (id_num int auto_increment primary key, url_id int, service_id int, FOREIGN KEY (url_id) REFERENCES Url(id_num) ON DELETE CASCADE, FOREIGN KEY (service_id) REFERENCES Service(id_num) ON DELETE CASCADE);");
+	
 
 	console.log("tables created");
 }
