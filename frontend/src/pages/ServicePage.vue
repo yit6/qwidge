@@ -19,7 +19,7 @@
     <p>{{ service.description }}</p>
     <p>Sources:</p>
     <ul>
-      <li v-for="link in service.sources">{{ link }}</li>
+      <a v-for="link in service.sources" href="{{link}}"><li>{{ link }}</li></a>
     </ul>
   </template>
   <template v-else>

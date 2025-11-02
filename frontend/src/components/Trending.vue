@@ -22,9 +22,9 @@ function goToAllServices() {
             <a @click="goToAllServices">View All</a>
         </div>
         <div class="trending-tiles">
-            <service-item service-id="1"/>
-            <service-item/>
-            <service-item/>
+            <service-item service-id="345"/>
+            <service-item service-id="463"/>
+            <service-item service-id="459"/>
         </div>
     </section>
 </template>

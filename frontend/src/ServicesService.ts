@@ -31,7 +31,7 @@ async function getService(id: number): Promise<Service> {
         await getData();
     }
     for (const i of services) {
-        if (i.id === id) {
+        if (i.id == id) {
             return i;
         }
     }
