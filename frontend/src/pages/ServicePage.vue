@@ -5,7 +5,11 @@
 
   let id: number = +useRoute().params.id!;
   let service: Ref<Service> = ref(null);
-  getService(id).then((r: Service) => service.value = r);
+  let sourceList: Ref<Array<string>> = ref(null)
+  getService(id).then((r: Service) => {
+    service.value = r
+    sourceList.value = JSON.parse(service.sources)
+  });
 </script>
 
 <template>
@@ -15,7 +19,10 @@
     <img :src="service.imageUrl" alt="">
     <p>{{ service.description }}</p>
     <p>Rating: {{service.rating}}</p>
-    <p>Sources: {{service.sources}}</p>
+    <p>Sources:</p>
+    <ul>
+      <li v-for="link in sourceList">{{ link }}</li>
+    </ul>
   </template>
   <template v-else>
     <p>not found</p>
