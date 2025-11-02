@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import SearchBar from '@/components/SearchBar.vue';
 import Trending from '@/components/Trending.vue'
-import host from "@/ServicesService.js"
 </script>
 
 <template>
@@ -15,10 +14,12 @@ import host from "@/ServicesService.js"
   <trending/>
   <div>
     <p>Have something to offer?</p>
+    <!--
     <form :action="host+'/search'" method="post">
     <input type="text" name="url">
     <input type="submit">Submit Services</input>
     </form>
+    -->
   </div>
 </template>
 
