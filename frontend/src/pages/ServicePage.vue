@@ -11,7 +11,7 @@
 </script>
 
 <template>
-  <router-link to="/services">Return</router-link>
+  <router-link to="/services" style="color:lightblue;">Return</router-link>
   <template v-if="service">
     <h1>{{ service.title }}</h1>
     <h2>provided by: {{ service.organization }}</h2>
@@ -19,7 +19,7 @@
     <p>{{ service.description }}</p>
     <p>Sources:</p>
     <ul>
-      <a v-for="link in service.sources" href="{{link}}"><li>{{ link }}</li></a>
+      <a v-for="link in service.sources" href="{{link}}" style="color:lightblue;"><li>{{ link }}</li></a>
     </ul>
   </template>
   <template v-else>
