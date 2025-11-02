@@ -5,11 +5,7 @@
 
   let id: number = +useRoute().params.id!;
   let service: Ref<Service> = ref(null);
-  let sourceList: Ref<Array<string>> = ref(null)
-  getService(id).then((r: Service) => {
-    service.value = r
-    sourceList.value = JSON.parse(service.sources)
-  });
+  let sourceList: Ref<Array<string>> = ref(null);
 </script>
 
 <template>
@@ -21,7 +17,7 @@
     <p>{{ service.description }}</p>
     <p>Sources:</p>
     <ul>
-      <li v-for="link in sourceList">{{ link }}</li>
+      <li v-for="link in service.sources">{{ link }}</li>
     </ul>
   </template>
   <template v-else>
