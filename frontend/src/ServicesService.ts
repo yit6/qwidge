@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+const host = 'http://localhost:8080'
+
 interface Service {
     id: number,
     title: string,
@@ -12,7 +14,7 @@ interface Service {
 let services: Service[]
 
 async function getData() {
-    services = (await axios.get('http://localhost:8080/services')).data;
+    services = (await axios.get(host+'/services')).data;
     console.log("backend contacted", services)
 }
 

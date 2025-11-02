@@ -2,7 +2,7 @@
 import { ref, onMounted, watch, nextTick } from 'vue';
 import ServiceItem from '@/components/ServiceItem.vue';
 import { marked } from 'marked';
-
+import host from "@/ServicesService.js"
 import { defineProps } from 'vue';
 
 const props = defineProps({
@@ -21,7 +21,7 @@ let sessionData = '';
 // Function to start stream, which includes parsing bot's response as markdown
 async function startStream(msg: string) {
   try {
-    const sessionResponse = await fetch('http://localhost:8080/ai/create-session', {
+    const sessionResponse = await fetch(host+'/ai/create-session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ async function startStream(msg: string) {
 
     sessionData = await sessionResponse.json();
 
-    const streamResponse = await fetch('http://localhost:8080/ai/chat-with-gemini', {
+    const streamResponse = await fetch(host+'/ai/chat-with-gemini', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
