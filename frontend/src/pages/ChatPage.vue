@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, nextTick } from 'vue';
 import ServiceItem from '@/components/ServiceItem.vue';
+import { marked } from 'marked';
 
-const messages = ref<{ role: string, text: string }[]>([]);
+const messages = ref<{ role: string, text: string, parsedText?: string }[]>([]);
 const userInput = ref('');
 let sessionData = '';
 
+// Function to start stream, which includes parsing bot's response as markdown
 async function startStream(msg: string) {
   try {
     const sessionResponse = await fetch('http://localhost:8080/ai/create-session', {
@@ -43,7 +45,7 @@ async function startStream(msg: string) {
     let buffer = '';
 
     while (!done) {
-      const { value, done: streamDone } = await reader!.read();
+      const { value, done: streamDone } = await reader.read();
       done = streamDone;
       const chunk = decoder.decode(value, { stream: true });
       buffer += chunk;
@@ -68,24 +70,25 @@ async function startStream(msg: string) {
       }
     }
 
+    // After receiving the full response, parse the bot's text as markdown
+    messages.value.forEach((msg) => {
+      if (msg.role === 'bot') {
+        msg.parsedText = marked(msg.text); // Convert markdown to HTML
+      }
+    });
   } catch (error) {
     console.error('Error:', error);
   }
 }
 
+// Function to send user messages
 async function sendUserMessage() {
   if (userInput.value.trim() !== '') {
     messages.value.push({ role: 'user', text: userInput.value });
-
     startStream(userInput.value);
-
     userInput.value = '';
   }
 }
-
-// onMounted(() => {
-//   startStream('explain to me how I can disable CORS in Node in two paragraphs.');
-// });
 
 watch(messages, async () => {
   await nextTick();
@@ -104,7 +107,8 @@ watch(messages, async () => {
   <div id="chat-container">
     <ul id="chat-box">
       <li v-for="(msg, index) in messages" :key="index" :class="msg.role">
-        <p>{{ msg.text }}</p>
+        <p v-if="msg.role === 'user'">{{ msg.text }}</p>
+        <p v-if="msg.role === 'bot'" v-html="msg.parsedText"></p> <!-- Render parsed markdown for bot -->
       </li>
     </ul>
     <div id="input-container">
