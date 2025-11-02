@@ -29,10 +29,8 @@ db.init_db().then(() => {
 	// Add test data
 	if (true) {
 	db.add_service("trash", "pick up trash", "trash dude", ["https://google.com/", "https://trash.com/"]);
-	db.add_service("microplastics", "yummy", "micro corp", ["https://microplastics.rit.edu/", "https://website.com/", "https://localhost/"]);
+	db.add_service("microplastics", "yummy", "micro corp", ["https://microplastics.rit.edu/", "https://website.com/", "https://localhost/"]).then(db.get_services_light);
 	}
-
-	db.merge_org_into("trash dude", "micro corp");
 });
 
 // view engine setup

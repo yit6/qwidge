@@ -14,7 +14,7 @@ const init_db = async () => {
 
 	[results, fields] = await connection.query("CREATE TABLE IF NOT EXISTS Url (id_num int auto_increment primary key, url text);");
 
-	[results, fields] = await connection.query("CREATE TABLE IF NOT EXISTS RelSUrl (id_num int auto_increment primary key, url_id int, service_id int, FOREIGN KEY (url_id) REFERENCES Url(id_num), FOREIGN KEY (service_id) REFERENCES Service(id_num));");
+	[results, fields] = await connection.query("CREATE TABLE IF NOT EXISTS RelSUrl (id_num int auto_increment primary key, url_id int, service_id int, FOREIGN KEY (url_id) REFERENCES Url(id_num) ON DELETE CASCADE, FOREIGN KEY (service_id) REFERENCES Service(id_num) ON DELETE CASCADE);");
 
 	console.log("tables created");
 }
@@ -115,6 +115,20 @@ const merge_org_into = async (org_to_be_removed, org_to_consume_other) => {
 	let [results, fields] = await connection.query("UPDATE Service SET organization=? WHERE organization=?", [org_to_consume_other, org_to_be_removed]);
 }
 
+const delete_service = async (id) => {
+	console.log(`deleting service ${id}`);
+
+	let [results, fields] = await connection.query("DELETE FROM Service WHERE id_num=?", [id]);
+}
+
+const get_services_light = async () => {
+	console.log(`getting a bare minimum of info from each service`);
+
+	let [results, fields] = await connection.query("SELECT id_num, name, description FROM Service");
+
+	return results;
+}
+
 module.exports = {
 	init_db,
 	add_service,
@@ -124,4 +138,6 @@ module.exports = {
 	get_all_service_ids,
 	get_org_names,
 	merge_org_into,
+	delete_service,
+	get_services_light,
 };
