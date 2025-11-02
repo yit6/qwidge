@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 let list = [
   "hire someone to clean your house...",
   "book a dog walker...",

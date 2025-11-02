@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import ServiceItem from "@/components/ServiceItem.vue";
 import {getServices, Service} from "@/ServicesService.ts";
 
