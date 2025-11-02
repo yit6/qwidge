@@ -28,7 +28,12 @@ async function getService(id: number): Promise<Service> {
     if (!services) {
         await getData();
     }
-    return services[id]!;
+    for (const i of services) {
+        if (i.id === id) {
+            return i;
+        }
+    }
+    throw new Error("key not found: "+ id)
 }
 
 export {getService, getServices, Service};

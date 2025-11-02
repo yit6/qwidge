@@ -4,7 +4,7 @@ import {ref, Ref} from "vue";
 const { serviceId, raw } = defineProps(['serviceId','raw'])
 
 let service: Ref<Service> = ref(null);
-if(raw) {
+if(!serviceId) {
   service.value = { id: -1, title: "???", description: "your dream service", imageUrl:"", rating: 0, sources: [] }
 }
 else {
@@ -17,6 +17,7 @@ else {
         <h1>{{ service.title }}</h1>
         <p>{{ service.description }}</p>
     </router-link>
+    <p v-else>ERROR</p>
 </template>
 
 <style scoped>

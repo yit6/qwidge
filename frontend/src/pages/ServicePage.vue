@@ -3,12 +3,13 @@
   import {getService, Service} from "@/ServicesService.ts";
   import {Ref, ref} from "vue";
 
-  let id = useRoute().params.id;
+  let id: number = +useRoute().params.id!;
   let service: Ref<Service> = ref(null);
-  getService(id).then(r => service.value = r);
+  getService(id).then((r: Service) => service.value = r);
 </script>
 
 <template>
+  <router-link to="/services">Return</router-link>
   <template v-if="service">
     <h1>{{ service.title }}</h1>
     <img :src="service.imageUrl" alt="">
