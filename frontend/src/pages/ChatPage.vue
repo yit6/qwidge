@@ -133,6 +133,7 @@ watch(messages, async () => {
 </template>
 
 <style scoped>
+
 #service-framework {
   padding: 20px 10vw;
 }
@@ -174,7 +175,8 @@ watch(messages, async () => {
 }
 
 .bot p {
-  background-color: #f0f0f0;
+  background-color: orange;
+  color:black;
 }
 
 .user {
