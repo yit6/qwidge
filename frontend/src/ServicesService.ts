@@ -36,4 +36,15 @@ async function getService(id: number): Promise<Service> {
     throw new Error("key not found: "+ id)
 }
 
-export {getService, getServices, Service};
+async function getSearch(q: string): Promise<Service[]> {
+	const res:number[] = await axios.get(`http://localhost:8080/search?q=${q}`);
+	console.log(res);
+
+	const ids = res.data.ids;
+
+	const services:Service[] = await Promise.all(ids.map(getService));
+	console.log(services);
+	return services;
+}
+
+export {getService, getServices, getSearch, Service};
