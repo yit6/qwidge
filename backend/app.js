@@ -50,6 +50,8 @@ app.get('/services/:id', service_controller.get);
 
 app.get('/search', search_controller.search_services);
 
+app.post('/search', search_controller.search_url);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   let error = new Error('Not found')

@@ -178,20 +178,23 @@ const get_services_from_url = async (url, amount) => {
 	
 	let queue = [url];
 
-	while (!queue.isEmpty() && amount > 0) {
+	while (queue.length != 0 && amount > 0) {
+
+		console.log(queue);
 
 		amount--;
-		url = urls.dequeue();
+		url = queue.shift();
 
 		console.log(`Working on ${url}`);
 
 		const text = await parse_site(url);
 
-		//const output = await extractServicesAndLinks(text);
-		output = { linksToExplore: [ { link: url }, { link: url } ], services: []};
+		const output = await extractServicesAndLinks(text);
 
 		console.log(output);
 		console.log(output.linksToExplore);
+
+		queue.push(...(output.linksToExplore.map(o => o.link)));
 
 		output.services.forEach((service) => {
 			console.log(service);

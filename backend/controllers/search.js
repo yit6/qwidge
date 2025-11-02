@@ -1,6 +1,7 @@
 const db = require('../db');
-const { GoogleGenAI } = require("@google/genai");
+const info_gathering = require('../lib/info-gathering');
 
+const { GoogleGenAI } = require("@google/genai");
 const ai = new GoogleGenAI({apiKey: `${process.env.GEMINI_API}`});
 
 const search_services = async (req, res) => {
@@ -45,9 +46,21 @@ const search_services = async (req, res) => {
 	});
 
 	res.json(response.text);
-
 }
+
+const search_url = async (req, res) => {
+	if (!req.body.url) {
+		let e = new Error("No url in body");
+		e.status = 400;
+		throw e;
+	}
+	
+	info_gathering.get_services_from_url(req.body.url, 20);
+
+	res.send("Hullo?");
+};
 
 module.exports = {
 	search_services,
+	search_url,
 }
