@@ -3,14 +3,6 @@ import { ref, onMounted, watch, nextTick } from 'vue';
 import ServiceItem from '@/components/ServiceItem.vue';
 import { marked } from 'marked';
 import { host } from "@/ServicesService.js"
-import { defineProps } from 'vue';
-
-const props = defineProps({
-  existingMessage: {
-    type: String,
-    required: false,
-  },
-});
 
 const messages = ref<{ role: string, text: string, parsedText?: string }[]>([]);
 const flavor = "Hi, thanks for visiting! I am here to help you learn about services!"
@@ -100,11 +92,6 @@ async function sendUserMessage() {
     startStream(userInput.value);
     userInput.value = '';
   }
-}
-
-if (props.existingMessage) {
-    messages.value.push({ role: 'user', text: props.existingMessage });
-    startStream(props.existingMessage)
 }
 
 watch(messages, async () => {
