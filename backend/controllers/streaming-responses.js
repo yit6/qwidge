@@ -3,6 +3,7 @@ const {
     createChatStreamSearch,
     chatWithGemini,
 } = require('../lib/streaming-responses')
+const fs = require("fs");
 
 /**
  * To begin a chat session with Gemini, you need to initialize a
@@ -37,7 +38,7 @@ const newChatSession = (req, res) => {
  */
 const continueChatSession = async (req, res) => {
     const responseStream = await chatWithGemini(req.body.sessionID, req.body.message)
-    res.send(responseStream)
+    responseStream.pipe(res)
 }
 
 module.exports = {
