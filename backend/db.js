@@ -63,8 +63,30 @@ const get_service = async (id) => {
 	return results[0];
 }
 
+const get_url = async (id) => {
+	console.log(`getting url ${id}`);
+
+	let [results, fields] = await connection.query("SELECT url from Url WHERE id_num=?", [id]);
+
+	if (results.length != 1) {
+		throw new Error("Could not find url");
+	}
+
+	return results[0].url;
+}
+
+const get_service_urls = async (service_id) => {
+	console.log(`getting urls for service ${service_id}`);
+	
+	let [results, fields] = await connection.query("SELECT url_id from RelSUrl WHERE service_id=?", [service_id]);
+
+	return Promise.all(results.map(result => get_url(result.url_id)));
+}
+
 module.exports = {
 	init_db,
 	add_service,
-	get_service
+	get_service,
+	get_url,
+	get_service_urls
 };

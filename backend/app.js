@@ -16,7 +16,7 @@ const port = 8080
 const db = require('./db');
 
 db.init_db().then(() => {
-	db.add_service("trash", "pick up trash", ["https://google.com/something", "https://localhost"]).then(() => { db.get_service(12).then(console.log)});
+	db.get_service_urls(12).then(console.log);
 });
 
 // view engine setup
