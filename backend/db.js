@@ -54,7 +54,7 @@ const add_service = async (name, description, urls) => {
 const get_service = async (id) => {
 	console.log(`getting service ${id}`);
 
-	let [results, fields] = await connection.query("SELECT * from Service WHERE id_num=?", [id]);
+	let [results, fields] = await connection.query("SELECT * FROM Service WHERE id_num=?", [id]);
 
 	if (results.length != 1) {
 		throw new Error("Could not find service");
@@ -66,7 +66,7 @@ const get_service = async (id) => {
 const get_url = async (id) => {
 	console.log(`getting url ${id}`);
 
-	let [results, fields] = await connection.query("SELECT url from Url WHERE id_num=?", [id]);
+	let [results, fields] = await connection.query("SELECT url FROM Url WHERE id_num=?", [id]);
 
 	if (results.length != 1) {
 		throw new Error("Could not find url");
@@ -78,9 +78,17 @@ const get_url = async (id) => {
 const get_service_urls = async (service_id) => {
 	console.log(`getting urls for service ${service_id}`);
 	
-	let [results, fields] = await connection.query("SELECT url_id from RelSUrl WHERE service_id=?", [service_id]);
+	let [results, fields] = await connection.query("SELECT url_id FROM RelSUrl WHERE service_id=?", [service_id]);
 
 	return Promise.all(results.map(result => get_url(result.url_id)));
+}
+
+const get_all_service_ids = async () => {
+	console.log(`getting service ids`);
+
+	let [results, fields] = await connection.query("SELECT id_num FROM Service");
+
+	return results.map(result => result.id_num);
 }
 
 module.exports = {
@@ -88,5 +96,6 @@ module.exports = {
 	add_service,
 	get_service,
 	get_url,
-	get_service_urls
+	get_service_urls,
+	get_all_service_ids
 };

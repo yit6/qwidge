@@ -16,7 +16,13 @@ const port = 8080
 const db = require('./db');
 
 db.init_db().then(() => {
-	db.get_service_urls(12).then(console.log);
+	//db.get_all_service_ids().then(console.log);
+
+	// Add test data
+	if (false) {
+	db.add_service("trash", "pick up trash", ["https://google.com/", "https://trash.com/"]);
+	db.add_service("microplastics", "yummy", ["https://microplastics.rit.edu/", "https://website.com/", "https://localhost/"]);
+	}
 });
 
 // view engine setup
